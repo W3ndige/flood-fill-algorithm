@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string>
+#include <vector>
 #include <SDL2/SDL.h>
 
 // TODO(W3ndige): Implement importing colouring pages.
@@ -26,15 +27,60 @@ class Menu {
     }
 };
 
-// TODO(W3ndige): Find bug, floodFill will break when the window is empty.
-void floodFill(Uint32 *pixels, int mouseX, int mouseY, Uint32 old_color, Uint32 new_color) {
+// TODO(W3ndige): Investigate too big recursive depth, stack is filled to quickly and the program will crash on some instances.
+// http://www.vioja.com/how-to-fix-a-recursive-flood-fill-segmentation-error-closed/
+// https://stackoverflow.com/questions/36497014/recursive-floodfill-segmentation-fault/36497640
+void recursiveFloodFill4(Uint32 *pixels, int mouseX, int mouseY, Uint32 old_color, Uint32 new_color) {
   if ((mouseX < SCREEN_WIDTH && mouseX >= 0) && (mouseY < SCREEN_HEIGHT && mouseY >= MENU_HEIGHT)) { // Check boundaries.
-    if (old_color == pixels[mouseY * SCREEN_WIDTH + mouseX] && new_color != pixels[mouseY * SCREEN_WIDTH + mouseX]) { // Check if the old color matches the color in the location AND check if the color in the locations is not the same as the new one.
+    if ((old_color == pixels[mouseY * SCREEN_WIDTH + mouseX]) && (new_color != pixels[mouseY * SCREEN_WIDTH + mouseX])) { // Check if the old color matches the color in the location AND check if the color in the locations is not the same as the new one.
       pixels[mouseY * SCREEN_WIDTH + mouseX] = new_color; // Add a new pixel, and call new instances of floodFill algorithm.
-      floodFill(pixels, mouseX - 1, mouseY, old_color, new_color);
-      floodFill(pixels, mouseX + 1, mouseY, old_color, new_color);
-      floodFill(pixels, mouseX, mouseY + 1, old_color, new_color);
-      floodFill(pixels, mouseX, mouseY - 1, old_color, new_color);
+      //printf("X: %d, Y: %d\n", mouseX, mouseY);
+      recursiveFloodFill4(pixels, mouseX - 1, mouseY, old_color, new_color);
+      recursiveFloodFill4(pixels, mouseX + 1, mouseY, old_color, new_color);
+      recursiveFloodFill4(pixels, mouseX, mouseY + 1, old_color, new_color);
+      recursiveFloodFill4(pixels, mouseX, mouseY - 1, old_color, new_color);
+    }
+  }
+}
+
+// Stack functions
+void push(std::vector<int>& stack, int x, int y) {
+  stack.push_back(x);
+  stack.push_back(y);
+}
+
+bool pop(std::vector<int>& stack, int& x, int& y) {
+  if (stack.size() < 2) {
+    return false;
+  }
+  y = stack.back();
+  stack.pop_back();
+  x = stack.back();
+  stack.pop_back();
+  return true;
+}
+
+// TODO(W3ndige): Rewrite?
+// More efficient version of flood fill algorithm based on a stack
+// https://en.wikipedia.org/wiki/Flood_fill#Alternative_implementations
+void stackFloodFill4(Uint32 *pixels, int mouseX, int mouseY, Uint32 old_color, Uint32 new_color) {
+  if (new_color == pixels[mouseY * SCREEN_WIDTH + mouseX]) {
+    return;
+  }
+
+  static const int dx[4] = {0, 1, 0, -1};
+  static const int dy[4] = {-1, 0, 1, 0};
+
+  std::vector<int> stack;
+  push(stack, mouseX, mouseY);
+  while (pop(stack, mouseX, mouseY)) {
+    pixels[mouseY * SCREEN_WIDTH + mouseX] = new_color;
+    for (int i = 0; i < 4; i++) {
+      int nx = mouseX + dx[i];
+      int ny = mouseY + dy[i];
+      if(nx >= 0 && nx < SCREEN_WIDTH && ny >= MENU_HEIGHT && ny < SCREEN_HEIGHT && pixels[ny * SCREEN_WIDTH + nx] == old_color) {
+        push(stack, nx, ny);
+      }
     }
   }
 }
@@ -54,6 +100,10 @@ void paintPixel(Uint32 *pixels, int mouseX, int mouseY, int brush_size ,Uint32 c
       }
     }
   }
+}
+
+void setCanvasBackground(Uint32 *pixels, Uint32 color) {
+  memset(pixels, color, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
 }
 
  int main(int argc, char *argv[]) {
@@ -84,7 +134,7 @@ void paintPixel(Uint32 *pixels, int mouseX, int mouseY, int brush_size ,Uint32 c
  Uint32 *pixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT]; // Assign new set of pixels.
 
  SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
- memset(pixels, 255, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32)); // Set the background color to white.
+ setCanvasBackground(pixels, 255);
 
  // Essential variables
  bool end = false;
@@ -117,6 +167,11 @@ void paintPixel(Uint32 *pixels, int mouseX, int mouseY, int brush_size ,Uint32 c
        }
        if (event.key.keysym.sym == SDLK_KP_MINUS) {
          brush_size--;
+       }
+
+       // Reset the canvas
+       if (event.key.keysym.sym == SDLK_BACKSPACE) {
+         setCanvasBackground(pixels, 255);
        }
 
        // Use predefined colors
@@ -153,7 +208,7 @@ void paintPixel(Uint32 *pixels, int mouseX, int mouseY, int brush_size ,Uint32 c
          int mouseX = event.motion.x;
          int mouseY = event.motion.y;
          Uint32 old_color = pixels[mouseY * SCREEN_WIDTH + mouseX];
-         floodFill(pixels, mouseX, mouseY, old_color, current_color);
+         stackFloodFill4(pixels, mouseX, mouseY, old_color, current_color);
        }
      }
 
@@ -186,7 +241,7 @@ void paintPixel(Uint32 *pixels, int mouseX, int mouseY, int brush_size ,Uint32 c
   }
 
   // Essential cleanup
-  free(pixels);
+  delete[] pixels;
   SDL_DestroyTexture(texture);
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
