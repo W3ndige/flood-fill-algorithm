@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <string>
-#include <vector>
+#include <queue>
 #include <SDL2/SDL.h>
 
 // TODO(W3ndige): Implement importing colouring pages.
+// TODO(W3ndige): Optimization.
 
 const int SCREEN_WIDTH  = 640;
 const int SCREEN_HEIGHT = 480;
@@ -43,44 +44,27 @@ void recursiveFloodFill4(Uint32 *pixels, int mouseX, int mouseY, Uint32 old_colo
   }
 }
 
-// Stack functions
-void push(std::vector<int>& stack, int x, int y) {
-  stack.push_back(x);
-  stack.push_back(y);
-}
-
-bool pop(std::vector<int>& stack, int& x, int& y) {
-  if (stack.size() < 2) {
-    return false;
-  }
-  y = stack.back();
-  stack.pop_back();
-  x = stack.back();
-  stack.pop_back();
-  return true;
-}
-
-// TODO(W3ndige): Rewrite?
-// More efficient version of flood fill algorithm based on a stack
+// TODO(W3ndige): Experiment.
+// More efficient version of flood fill algorithm based on a queue.
 // https://en.wikipedia.org/wiki/Flood_fill#Alternative_implementations
-void stackFloodFill4(Uint32 *pixels, int mouseX, int mouseY, Uint32 old_color, Uint32 new_color) {
+void queueFloodFill4(Uint32 *pixels, int mouseX, int mouseY, Uint32 old_color, Uint32 new_color) {
   if (new_color == pixels[mouseY * SCREEN_WIDTH + mouseX]) {
     return;
   }
 
-  static const int dx[4] = {0, 1, 0, -1};
-  static const int dy[4] = {-1, 0, 1, 0};
+  struct coordinates { int mouseX, mouseY;};
+  std::queue<coordinates> fill;
+  fill.push({mouseX, mouseY});
 
-  std::vector<int> stack;
-  push(stack, mouseX, mouseY);
-  while (pop(stack, mouseX, mouseY)) {
-    pixels[mouseY * SCREEN_WIDTH + mouseX] = new_color;
-    for (int i = 0; i < 4; i++) {
-      int nx = mouseX + dx[i];
-      int ny = mouseY + dy[i];
-      if(nx >= 0 && nx < SCREEN_WIDTH && ny >= MENU_HEIGHT && ny < SCREEN_HEIGHT && pixels[ny * SCREEN_WIDTH + nx] == old_color) {
-        push(stack, nx, ny);
-      }
+  while (!fill.empty()) {
+    coordinates top = fill.front();
+    fill.pop();
+    if (top.mouseX >= 0 && top.mouseX < SCREEN_WIDTH && top.mouseY >= MENU_HEIGHT && top.mouseY < SCREEN_HEIGHT && pixels[top.mouseY * SCREEN_WIDTH + top.mouseX] == old_color) {
+        pixels[top.mouseY * SCREEN_WIDTH + top.mouseX] = new_color;
+        fill.push({top.mouseX + 1, top.mouseY});
+        fill.push({top.mouseX, top.mouseY + 1});
+        fill.push({top.mouseX - 1, top.mouseY});
+        fill.push({top.mouseX, top.mouseY - 1});
     }
   }
 }
@@ -106,16 +90,16 @@ void setCanvasBackground(Uint32 *pixels, Uint32 color) {
   memset(pixels, color, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
 }
 
- int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 
   // Initialize SDL2.
- if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
+ if( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
    printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
    SDL_Quit();
    return 1;
  }
 
- SDL_Window *window = SDL_CreateWindow("Flood Fill", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_MAXIMIZED);
+ SDL_Window *window = SDL_CreateWindow("Flood Fill", SDL_WINDOWPOS_CENTERED, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
  if (window == nullptr) {
    printf( "SDL Window could not initialize! SDL_Error: %s\n", SDL_GetError() );
@@ -132,24 +116,26 @@ void setCanvasBackground(Uint32 *pixels, Uint32 color) {
  }
 
  Uint32 *pixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT]; // Assign new set of pixels.
-
  SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
  setCanvasBackground(pixels, 255);
 
  // Essential variables
  bool end = false;
  bool leftMouseButton = false;
+
  Uint32 current_color = 0;
- int brush_size = 1;
+ int brush_size = 5;
+
  SDL_Event event;
  Menu menu;
 
  while (!end) {
-   SDL_UpdateTexture(texture, NULL, pixels, SCREEN_WIDTH * sizeof(Uint32));
-   menu.printCurrentColor(pixels, current_color);
    while (SDL_PollEvent(&event)) {
 
-     // Events handler
+     // Experiment with this behaviour.
+     SDL_UpdateTexture(texture, NULL, pixels, SCREEN_WIDTH * sizeof(Uint32));
+     menu.printCurrentColor(pixels, current_color);
+
      if (event.type == SDL_QUIT) {
        end = true;
        break;
@@ -159,14 +145,6 @@ void setCanvasBackground(Uint32 *pixels, Uint32 color) {
      if (event.type == SDL_KEYDOWN) {
        if (event.key.keysym.sym == SDLK_SPACE) {
          puts("Save to Image"); // TODO(W3ndige): Implement save image function.
-       }
-
-       // Paint brush size change, incremented or decremented while pressed '+' or '-' key on keypad.
-       if (event.key.keysym.sym == SDLK_KP_PLUS) {
-         brush_size++;
-       }
-       if (event.key.keysym.sym == SDLK_KP_MINUS) {
-         brush_size--;
        }
 
        // Reset the canvas
@@ -208,7 +186,7 @@ void setCanvasBackground(Uint32 *pixels, Uint32 color) {
          int mouseX = event.motion.x;
          int mouseY = event.motion.y;
          Uint32 old_color = pixels[mouseY * SCREEN_WIDTH + mouseX];
-         stackFloodFill4(pixels, mouseX, mouseY, old_color, current_color);
+         queueFloodFill4(pixels, mouseX, mouseY, old_color, current_color);
        }
      }
 
@@ -220,21 +198,17 @@ void setCanvasBackground(Uint32 *pixels, Uint32 color) {
        }
      }
 
-     // Slight change of color while using mouse wheel.
-     // TODO(W3ndige): Mouse wheel for brush size?
-     // TODO(W3ndige): Find bug with colors
+     // Paint brush size change, incremented or decremented while rolling mouse wheel.
      if (event.type == SDL_MOUSEWHEEL) {
        if (event.wheel.y == 1) {
-         current_color += 10;
+         brush_size++;
        }
        if (event.wheel.y == -1) {
-         current_color -= 10;
+         brush_size--;
        }
      }
-
      break;
    }
-
    SDL_RenderClear(renderer);
  	 SDL_RenderCopy(renderer, texture, NULL, NULL);
    SDL_RenderPresent(renderer);
@@ -246,5 +220,5 @@ void setCanvasBackground(Uint32 *pixels, Uint32 color) {
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
   SDL_Quit();
-
+  return 0;
 }
