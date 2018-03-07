@@ -12,11 +12,8 @@ const int SCREEN_WIDTH  = 720;
 const int SCREEN_HEIGHT = 480;
 const int MENU_HEIGHT = 20;
 
-const Uint32 COLOR_BLACK = 0xFF000000;
-const Uint32 COLOR_WHITE = 0xFFFFFFFF;
-const Uint32 COLOR_RED = 0xFFFF0000;
-const Uint32 COLOR_GREEN = 0xFF00FF00;
-const Uint32 COLOR_BLUE = 0xFF0000FF;
+// BLACK, WHITE, RED, GREEN, BLUE
+const Uint32 COLORS[5] = {0xFF000000, 0xFFFFFFFF, 0xFFFF0000, 0xFF00FF00, 0xFF0000FF};
 
 // Menu object that will work for the line of 20 pixels height, at the top of the window.
 class Menu {
@@ -28,6 +25,17 @@ class Menu {
         }
       }
     }
+    void printColorMenu(Uint32 *pixels) {
+      for (size_t i = 0; i < sizeof(COLORS)/sizeof(COLORS[0]); i++) {
+        size_t offset = MENU_HEIGHT * i;
+        for (size_t j = 0; j < MENU_HEIGHT; j++) {
+          for (size_t k = 720 - offset; k > (720 - MENU_HEIGHT - offset); k--) {
+            pixels[k + j * SCREEN_WIDTH] = COLORS[i];
+          }
+        }
+      }
+    }
+
 };
 
 // TODO(W3ndige): Experiment.
@@ -76,6 +84,21 @@ void setCanvasBackground(Uint32 *pixels, Uint32 color) {
   memset(pixels, color, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
 }
 
+void printControls(void) {
+    FILE *helpfile = fopen("README.md","r");
+    if (helpfile) {
+        char textline[300];
+        while (!feof(helpfile)) {
+            fgets(textline, 300, helpfile);
+            puts(textline);
+        }
+    fclose(helpfile);
+    }
+    else {
+        puts("Can't open help file! Make sure it's present in the program folder.");
+    }
+}
+
 int main(int argc, char *argv[]) {
 
   // Initialize SDL2.
@@ -99,6 +122,8 @@ int main(int argc, char *argv[]) {
    return 1;
  }
 
+ printControls();
+
  Uint32 *pixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT]; // Assign new set of pixels.
  SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
  setCanvasBackground(pixels, 255);
@@ -112,6 +137,10 @@ int main(int argc, char *argv[]) {
 
  SDL_Event event;
  Menu menu;
+ menu.printColorMenu(pixels); // Don't need to update this part of menu.
+
+ int mouseX = 0;
+ int mouseY = 0;
 
  while (!end) {
    while (SDL_PollEvent(&event)) {
@@ -125,9 +154,9 @@ int main(int argc, char *argv[]) {
          end = true;
          break;
        case SDL_MOUSEMOTION:
+         mouseX = event.motion.x;
+         mouseY = event.motion.y;
          if (leftMouseButton) {
-           int mouseX = event.motion.x;
-           int mouseY = event.motion.y;
            paintPixel(pixels, mouseX, mouseY, brush_size, current_color);
          }
          break;
@@ -135,10 +164,23 @@ int main(int argc, char *argv[]) {
          switch (event.button.button) {
            case SDL_BUTTON_LEFT:
              leftMouseButton = true;
+             if (mouseX > 700 && mouseX < 720 && mouseY > 0 && mouseY < MENU_HEIGHT) {
+               current_color = COLORS[0];
+             }
+             if (mouseX > 680 && mouseX < 700 && mouseY > 0 && mouseY < MENU_HEIGHT) {
+               current_color = COLORS[1];
+             }
+              if (mouseX > 660 && mouseX < 680 && mouseY > 0 && mouseY < MENU_HEIGHT) {
+               current_color = COLORS[2];
+             }
+              if (mouseX > 640 && mouseX < 660 && mouseY > 0 && mouseY < MENU_HEIGHT) {
+               current_color = COLORS[3];
+             }
+              if (mouseX > 620 && mouseX < 640 && mouseY > 0 && mouseY < MENU_HEIGHT) {
+               current_color = COLORS[4];
+             }
              break;
            case SDL_BUTTON_RIGHT:
-             int mouseX = event.motion.x;
-             int mouseY = event.motion.y;
              Uint32 old_color = pixels[mouseY * SCREEN_WIDTH + mouseX];
              queueFloodFill4(pixels, mouseX, mouseY, &old_color, &current_color);
              break;
@@ -160,25 +202,26 @@ int main(int argc, char *argv[]) {
        case SDL_KEYDOWN:
        switch (event.key.keysym.sym) {
          case SDLK_1:
-           current_color = COLOR_BLACK;
+           current_color = COLORS[0];
            break;
          case SDLK_2:
-           current_color = COLOR_WHITE;
+           current_color = COLORS[1];
            break;
          case SDLK_3:
-           current_color = COLOR_RED;
+           current_color = COLORS[2];
            break;
          case SDLK_4:
-           current_color = COLOR_GREEN;
+           current_color = COLORS[3];
            break;
          case SDLK_5:
-           current_color = COLOR_BLUE;
+           current_color = COLORS[4];
            break;
          case SDLK_SPACE: // TODO(W3ndige): Implement save image function.
            puts("Save to Image");
            break;
-         case SDLK_RSHIFT:
+         case SDLK_RSHIFT: // Reset the canvas.
            setCanvasBackground(pixels, 255);
+           menu.printColorMenu(pixels);
            break;
        }
        break;

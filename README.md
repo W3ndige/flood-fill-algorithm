@@ -5,11 +5,11 @@ Presentation of the Flood Fill algorithm in a simple Paint program writeen in C+
 
 Usage
 -----
-* `RSHIFT` to clean the screen
-* `LEFT_MOUSE_BUTTON` to draw pixels
-* `RIGHT_MOUSE_BUTTON` to fill area with color
-*	`SCROLL_WHEEL` to change the brush size
-* `1`, `2`, `3`, `4`, `5` change the color to one from the preset colors
+* `RSHIFT` to clean the screen.
+* `LEFT_MOUSE_BUTTON` to draw pixels.
+* `RIGHT_MOUSE_BUTTON` to fill area with color.
+*	`SCROLL_WHEEL` to change the brush size.
+* `1`, `2`, `3`, `4`, `5` change the color to one from the preset colors, which is also possible by clicking on the colors in menu.
 
 License
 -------
