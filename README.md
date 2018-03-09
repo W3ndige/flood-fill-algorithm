@@ -8,8 +8,10 @@ Usage
 * `RSHIFT` to clean the screen
 * `LEFT_MOUSE_BUTTON` to draw pixels
 * `RIGHT_MOUSE_BUTTON` to fill area with color
-*	`SCROLL_WHEEL` to change the brush size
+* `SCROLL_WHEEL` to change the brush size
 * `U` to undo or redo last operations
+* `S` to save the current image in a format of a hexdump
+* `1` to load the image
 * `UP` or `DOW` keys make the color more or less blue
 
 License

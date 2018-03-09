@@ -1,20 +1,20 @@
 #include <stdio.h>
-#include <string>
+#include <string.h>
 #include <queue>
 #include <SDL2/SDL.h>
 
-// TODO(W3ndige): Implement importing colouring pages.
 // TODO(W3ndige): Implement better brush algorithm.
+// TODO(W3ndige): Add option to choose between recursive and queue algorithms in the parameters.
 // TODO(W3ndige): Optimization.
 
 const int SCREEN_WIDTH  = 720;
 const int SCREEN_HEIGHT = 480;
 const int MENU_HEIGHT = 25;
-const int NUMBER_OF_COLORS = 9;
+const int NUMBER_OF_COLORS=16;
 
-const Uint32 COLORS[NUMBER_OF_COLORS] = {0xFF000000, 0xFFFFFFFF, 0xFFFF0000, 0xFF00FF00, 0xFF0000FF, 0xf442ee, 0x41dcf4, 0xf1f441, 0xf47f41};
+const Uint32 COLORS[NUMBER_OF_COLORS] = {0xFF000000, 0xC0C0C0, 0x808080, 0xFFFFFF, 0x800000, 0xFF0000, 0x800080, 0xFF00FF, 0x008000, 0x00FF00, 0x808000, 0xFFFF00, 0x000080, 0x0000FF, 0x008080, 0x00FFFF};
 
-// Menu object that will work for the line of 20 pixels height, at the top of the window.
+// Menu object that will work for the line of 30 pixels height, at the top of the window.
 class Menu {
   public:
     void printCurrentColor(Uint32 *pixels, Uint32 current_color) {
@@ -94,10 +94,9 @@ void printControls(void) {
     fclose(helpfile);
     }
     else {
-        puts("Can't open help file! Make sure it's present in the program folder.");
+        puts("Can't open help file! Make sure it's present in the program directory.");
     }
 }
-
 void swapElement(Uint32 *first, Uint32 *second) {
     Uint32 tmp=*first;
     *first=*second;
@@ -114,8 +113,31 @@ void swapPixels(Uint32 *pixels, Uint32 *tmppixels) {
     }
 }
 
-int main(int argc, char *argv[]) {
+// Create a hexdump of an pixel array.
+void saveImage(Uint32 *pixels) {
+  FILE *image = fopen("save.pix", "wb");
+  if (image) {
+    fwrite(pixels, sizeof(Uint32),SCREEN_WIDTH * SCREEN_HEIGHT, image);
+    fclose(image);
+  }
+  else {
+    puts("Can't open specified sample. Please check if it's present in the program directory.");
+  }
+}
 
+// Read the hexdump from the specified file.
+void readImage(Uint32 *pixels) {
+  FILE *image = fopen("save.pix", "rb");
+  if (image) {
+    fread(pixels, sizeof(Uint32),SCREEN_WIDTH * SCREEN_HEIGHT, image);
+    fclose(image);
+  }
+  else {
+    puts("Can't open specified sample. Please check if it's present in the program directory.");
+  }
+}
+
+int main(int argc, char *argv[]) {
   // Initialize SDL2.
  if( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
    printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
@@ -138,7 +160,6 @@ int main(int argc, char *argv[]) {
  }
 
  printControls();
-
  Uint32 *pixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT]; // Assign new set of pixels.
  Uint32 *tmppixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT];
  SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -147,13 +168,13 @@ int main(int argc, char *argv[]) {
  // Essential variables
  bool end = false;
  bool leftMouseButton = false;
-
  Uint32 current_color = 0;
  int brush_size = 5;
 
  SDL_Event event;
  Menu menu;
  menu.printColorMenu(pixels); // Don't need to update this part of menu.
+ copyPixels(pixels,tmppixels);
 
  int mouseX = 0;
  int mouseY = 0;
@@ -184,14 +205,14 @@ int main(int argc, char *argv[]) {
              if (mouseX > SCREEN_WIDTH - MENU_HEIGHT && mouseX < SCREEN_WIDTH && mouseY > 0 && mouseY < MENU_HEIGHT) {
                current_color = COLORS[0];
              }
-             for(int i = 1;i <= NUMBER_OF_COLORS; i++){
+             for(int i=1;i<=NUMBER_OF_COLORS-1;i++){
                 if (mouseX > SCREEN_WIDTH - (i + 1) * MENU_HEIGHT && mouseX < SCREEN_WIDTH - i * MENU_HEIGHT && mouseY > 0 && mouseY < MENU_HEIGHT) {
                     current_color = COLORS[i];
                 }
              }
              break;
-             break;
            case SDL_BUTTON_RIGHT:
+             copyPixels(pixels,tmppixels);
              Uint32 old_color = pixels[mouseY * SCREEN_WIDTH + mouseX];
              queueFloodFill4(pixels, mouseX, mouseY, &old_color, &current_color);
              break;
@@ -204,30 +225,36 @@ int main(int argc, char *argv[]) {
          break;
        case SDL_MOUSEWHEEL: // Paint brush size change, incremented or decremented while rolling mouse wheel.
          if (event.wheel.y == 1) {
+           if(brush_size < 10) { //
            brush_size++;
+           }
          }
          else if (event.wheel.y == -1) {
+           if(brush_size > 5)
            brush_size--;
          }
          break;
        case SDL_KEYDOWN:
        switch (event.key.keysym.sym) {
-         case SDLK_u: // Undo, redo option
-           swapPixels(pixels,tmppixels);
-           break;
+         case SDLK_1:
+            readImage(pixels);
+            break;
+         case SDLK_u:
+            swapPixels(pixels,tmppixels);
+            break;
+         case SDLK_s:
+            saveImage(pixels);
+            break;
          case SDLK_UP:
-            current_color -= 0x000500; // Makes current color less blue
+            current_color -= 0x000500;
             break;
          case SDLK_DOWN:
-            current_color += 0x000500; // Makes current color more blue
+            current_color += 0x000500;
             break;
-         case SDLK_SPACE: // TODO(W3ndige): Implement save image function.
-           puts("Save to Image");
-           break;
          case SDLK_RSHIFT: // Reset the canvas.
+           copyPixels(pixels,tmppixels);
            setCanvasBackground(pixels, 255);
            menu.printColorMenu(pixels);
-           copyPixels(pixels,tmppixels);
            break;
        }
        break;
