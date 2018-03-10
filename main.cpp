@@ -7,20 +7,20 @@
 // TODO(W3ndige): Add option to choose between recursive and queue algorithms in the parameters.
 // TODO(W3ndige): Optimization.
 
-const int SCREEN_WIDTH  = 720;
-const int SCREEN_HEIGHT = 480;
-const int MENU_HEIGHT = 25;
-const int NUMBER_OF_COLORS=16;
+const size_t SCREEN_WIDTH  = 720;
+const size_t SCREEN_HEIGHT = 480;
+const size_t MENU_HEIGHT = 25;
+const size_t NUMBER_OF_COLORS = 16;
 
 const Uint32 COLORS[NUMBER_OF_COLORS] = {0xFF000000, 0xC0C0C0, 0x808080, 0xFFFFFF, 0x800000, 0xFF0000, 0x800080, 0xFF00FF, 0x008000, 0x00FF00, 0x808000, 0xFFFF00, 0x000080, 0x0000FF, 0x008080, 0x00FFFF};
 
-// Menu object that will work for the line of 30 pixels height, at the top of the window.
+// Menu object that will work for the line of 25 pixels height, at the top of the window.
 class Menu {
   public:
-    void printCurrentColor(Uint32 *pixels, Uint32 current_color) {
-      for (int i = 0; i < MENU_HEIGHT; i++) {
-        for (int j = 0; j < MENU_HEIGHT; j++) {
-          pixels[j + i * SCREEN_WIDTH] = current_color;
+    void printCurrentColor(Uint32 *pixels, Uint32 currentColor) {
+      for (size_t i = 0; i < MENU_HEIGHT; i++) {
+        for (size_t j = 0; j < MENU_HEIGHT; j++) {
+          pixels[j + i * SCREEN_WIDTH] = currentColor;
         }
       }
     }
@@ -34,26 +34,25 @@ class Menu {
         }
       }
     }
-
 };
 
 // TODO(W3ndige): Experiment.
 // More efficient version of flood fill algorithm based on a queue.
 // https://en.wikipedia.org/wiki/Flood_fill#Alternative_implementations
-void queueFloodFill4(Uint32 *pixels, int mouseX, int mouseY, Uint32 *old_color, Uint32 *new_color) {
-  if (*new_color == pixels[mouseY * SCREEN_WIDTH + mouseX]) {
+void queueFloodFill4(Uint32 *pixels, size_t mouseX, size_t mouseY, Uint32 oldColor, Uint32 newColor) {
+  if (newColor == pixels[mouseY * SCREEN_WIDTH + mouseX]) {
     return;
   }
 
-  struct coordinates { int mouseX, mouseY;};
+  struct coordinates { size_t mouseX, mouseY;};
   std::queue<coordinates> fill;
   fill.push({mouseX, mouseY});
 
   while (!fill.empty()) {
     coordinates top = fill.front();
     fill.pop();
-    if (top.mouseX >= 0 && top.mouseX < SCREEN_WIDTH && top.mouseY >= MENU_HEIGHT && top.mouseY < SCREEN_HEIGHT && pixels[top.mouseY * SCREEN_WIDTH + top.mouseX] == *old_color) {
-        pixels[top.mouseY * SCREEN_WIDTH + top.mouseX] = *new_color;
+    if (top.mouseX < SCREEN_WIDTH && top.mouseY >= MENU_HEIGHT && top.mouseY < SCREEN_HEIGHT && pixels[top.mouseY * SCREEN_WIDTH + top.mouseX] == oldColor) {
+        pixels[top.mouseY * SCREEN_WIDTH + top.mouseX] = newColor;
         fill.push({top.mouseX + 1, top.mouseY});
         fill.push({top.mouseX, top.mouseY + 1});
         fill.push({top.mouseX - 1, top.mouseY});
@@ -63,17 +62,17 @@ void queueFloodFill4(Uint32 *pixels, int mouseX, int mouseY, Uint32 *old_color, 
 }
 
 // Paint pixels with according size.
-void paintPixel(Uint32 *pixels, int mouseX, int mouseY, int brush_size, Uint32 current_color) {
-  if (brush_size < 0) {
-    brush_size = 1;
+void paintPixel(Uint32 *pixels, size_t mouseX, size_t mouseY, int brushSize, Uint32 currentColor) {
+  if (brushSize < 0) {
+    brushSize = 1;
   }
-  if (brush_size > 10) {
-    brush_size = 10; // Maximum size
+  if (brushSize > 10) {
+    brushSize = 10; // Maximum size
   }
-  for (int i = mouseY; i < mouseY + brush_size; i++) {
-    if (i >= MENU_HEIGHT) { // Leave space for menu.
-      for (int j = mouseX; j < mouseX + brush_size; j++) {
-        pixels[j + i * SCREEN_WIDTH] = current_color;
+  for (size_t i = mouseY; i < mouseY + brushSize; i++) {
+    if (i >= MENU_HEIGHT) {
+      for (size_t j = mouseX; j < mouseX + brushSize; j++) {
+        pixels[j + i * SCREEN_WIDTH] = currentColor;
       }
     }
   }
@@ -83,7 +82,7 @@ void setCanvasBackground(Uint32 *pixels, Uint32 color) {
   memset(pixels, color, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
 }
 
-void printControls(void) {
+void printControls() {
     FILE *helpfile = fopen("README.md","r");
     if (helpfile) {
         char textline[300];
@@ -97,20 +96,13 @@ void printControls(void) {
         puts("Can't open help file! Make sure it's present in the program directory.");
     }
 }
-void swapElement(Uint32 *first, Uint32 *second) {
-    Uint32 tmp=*first;
-    *first=*second;
-    *second=tmp;
+
+void copyPixels(Uint32 *pixels, Uint32 *undoPixels) {
+  memcpy(undoPixels, pixels, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
 }
-void copyPixels(Uint32 *pixels, Uint32 *tmppixels) {
-    for(int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH; i++) {
-        tmppixels[i]=pixels[i];
-    }
-}
-void swapPixels(Uint32 *pixels, Uint32 *tmppixels) {
-    for(int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH; i++) {
-        swapElement(&pixels[i],&tmppixels[i]);
-    }
+
+void swapPixels(Uint32 *pixels, Uint32 *undoPixels) {
+  memcpy(pixels, undoPixels, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
 }
 
 // Create a hexdump of an pixel array.
@@ -129,8 +121,16 @@ void saveImage(Uint32 *pixels) {
 void readImage(Uint32 *pixels) {
   FILE *image = fopen("save.pix", "rb");
   if (image) {
-    fread(pixels, sizeof(Uint32),SCREEN_WIDTH * SCREEN_HEIGHT, image);
-    fclose(image);
+    fseek(image, 0, SEEK_END);
+    size_t size = ftell(image);
+    fseek(image, 0, SEEK_SET);
+    if (size == SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32)) { // Protect from loading to big files.
+      fread(pixels, sizeof(Uint32),SCREEN_WIDTH * SCREEN_HEIGHT, image);
+      fclose(image);
+    }
+    else {
+      puts("Input file is too large for the specified screen dimensions.");
+    }
   }
   else {
     puts("Can't open specified sample. Please check if it's present in the program directory.");
@@ -161,29 +161,29 @@ int main(int argc, char *argv[]) {
 
  printControls();
  Uint32 *pixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT]; // Assign new set of pixels.
- Uint32 *tmppixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT];
+ Uint32 *undoPixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT]; // Assign a set of pixels used in undo/redo algorithm.
  SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
  setCanvasBackground(pixels, 255);
 
  // Essential variables
  bool end = false;
  bool leftMouseButton = false;
- Uint32 current_color = 0;
- int brush_size = 5;
+ Uint32 currentColor = 0;
+ int brushSize = 5;
 
  SDL_Event event;
  Menu menu;
  menu.printColorMenu(pixels); // Don't need to update this part of menu.
- copyPixels(pixels,tmppixels);
+ copyPixels(pixels, undoPixels);
 
- int mouseX = 0;
- int mouseY = 0;
+ size_t mouseX = 0;
+ size_t mouseY = 0;
 
  while (!end) {
    while (SDL_PollEvent(&event)) {
 
      // Possible optimization?
-     menu.printCurrentColor(pixels, current_color);
+     menu.printCurrentColor(pixels, currentColor);
      SDL_UpdateTexture(texture, NULL, pixels, SCREEN_WIDTH * sizeof(Uint32));
 
      switch (event.type) {
@@ -194,27 +194,27 @@ int main(int argc, char *argv[]) {
          mouseX = event.motion.x;
          mouseY = event.motion.y;
          if (leftMouseButton) {
-           paintPixel(pixels, mouseX, mouseY, brush_size, current_color);
+           paintPixel(pixels, mouseX, mouseY, brushSize, currentColor);
          }
          break;
        case SDL_MOUSEBUTTONDOWN:
          switch (event.button.button) {
            case SDL_BUTTON_LEFT:
              leftMouseButton = true;
-             copyPixels(pixels,tmppixels);
+             copyPixels(pixels,undoPixels);
              if (mouseX > SCREEN_WIDTH - MENU_HEIGHT && mouseX < SCREEN_WIDTH && mouseY > 0 && mouseY < MENU_HEIGHT) {
-               current_color = COLORS[0];
+               currentColor = COLORS[0];
              }
-             for(int i=1;i<=NUMBER_OF_COLORS-1;i++){
+             for (size_t i = 1; i <= NUMBER_OF_COLORS - 1; i++) {
                 if (mouseX > SCREEN_WIDTH - (i + 1) * MENU_HEIGHT && mouseX < SCREEN_WIDTH - i * MENU_HEIGHT && mouseY > 0 && mouseY < MENU_HEIGHT) {
-                    current_color = COLORS[i];
+                    currentColor = COLORS[i];
                 }
              }
              break;
            case SDL_BUTTON_RIGHT:
-             copyPixels(pixels,tmppixels);
-             Uint32 old_color = pixels[mouseY * SCREEN_WIDTH + mouseX];
-             queueFloodFill4(pixels, mouseX, mouseY, &old_color, &current_color);
+             copyPixels(pixels,undoPixels);
+             Uint32 oldColor = pixels[mouseY * SCREEN_WIDTH + mouseX];
+             queueFloodFill4(pixels, mouseX, mouseY, oldColor, currentColor);
              break;
          }
          break;
@@ -225,13 +225,10 @@ int main(int argc, char *argv[]) {
          break;
        case SDL_MOUSEWHEEL: // Paint brush size change, incremented or decremented while rolling mouse wheel.
          if (event.wheel.y == 1) {
-           if(brush_size < 10) { //
-           brush_size++;
-           }
+           brushSize++;
          }
          else if (event.wheel.y == -1) {
-           if(brush_size > 5)
-           brush_size--;
+           brushSize--;
          }
          break;
        case SDL_KEYDOWN:
@@ -240,33 +237,36 @@ int main(int argc, char *argv[]) {
             readImage(pixels);
             break;
          case SDLK_u:
-            swapPixels(pixels,tmppixels);
+            swapPixels(pixels, undoPixels);
             break;
          case SDLK_s:
             saveImage(pixels);
             break;
          case SDLK_UP:
-            current_color -= 0x000500;
+            currentColor -= 0x000500;
             break;
          case SDLK_DOWN:
-            current_color += 0x000500;
+            currentColor += 0x000500;
             break;
          case SDLK_RSHIFT: // Reset the canvas.
-           copyPixels(pixels,tmppixels);
+           copyPixels(pixels, undoPixels);
            setCanvasBackground(pixels, 255);
            menu.printColorMenu(pixels);
            break;
        }
        break;
-     }
-   }
-   SDL_RenderClear(renderer);
- 	 SDL_RenderCopy(renderer, texture, NULL, NULL);
-   SDL_RenderPresent(renderer);
+      }
+    }
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
   }
 
   // Essential cleanup
+  setCanvasBackground(pixels, 255);
+  setCanvasBackground(undoPixels, 255);
   delete[] pixels;
+  delete[] undoPixels;
   SDL_DestroyTexture(texture);
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
