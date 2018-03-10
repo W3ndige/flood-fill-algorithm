@@ -9,12 +9,12 @@
 
 const size_t SCREEN_WIDTH  = 720;
 const size_t SCREEN_HEIGHT = 480;
-const size_t MENU_HEIGHT = 25;
-const size_t NUMBER_OF_COLORS = 16;
+const size_t MENU_HEIGHT = 30;
+const size_t NUMBER_OF_COLORS = 20;
 
-const Uint32 COLORS[NUMBER_OF_COLORS] = {0xFF000000, 0xC0C0C0, 0x808080, 0xFFFFFF, 0x800000, 0xFF0000, 0x800080, 0xFF00FF, 0x008000, 0x00FF00, 0x808000, 0xFFFF00, 0x000080, 0x0000FF, 0x008080, 0x00FFFF};
+const Uint32 COLORS[NUMBER_OF_COLORS] = {0xFF000000, 0xC0C0C0, 0x808080, 0xFFFFFF, 0x800000, 0xFF0000, 0xFFA500, 0x800080, 0xC969FF, 0xFF69B4, 0x008000, 0x08E100, 0x93FF2D, 0xC3C355, 0xFFFF00, 0xFFFF83, 0x000080, 0x0000FF, 0x008080, 0x00FFFF};
 
-// Menu object that will work for the line of 25 pixels height, at the top of the window.
+// Menu object that will work for the line of 30 pixels height, at the top of the window.
 class Menu {
   public:
     void printCurrentColor(Uint32 *pixels, Uint32 currentColor) {
@@ -69,10 +69,13 @@ void paintPixel(Uint32 *pixels, size_t mouseX, size_t mouseY, int brushSize, Uin
   if (brushSize > 10) {
     brushSize = 10; // Maximum size
   }
+
   for (size_t i = mouseY; i < mouseY + brushSize; i++) {
     if (i >= MENU_HEIGHT) {
       for (size_t j = mouseX; j < mouseX + brushSize; j++) {
-        pixels[j + i * SCREEN_WIDTH] = currentColor;
+        if ((j + i * SCREEN_WIDTH) <= SCREEN_HEIGHT * SCREEN_WIDTH && (j + i * SCREEN_WIDTH) < ((i + 1)* SCREEN_WIDTH)) {
+          pixels[j + i * SCREEN_WIDTH] = currentColor;
+        }
       }
     }
   }
@@ -80,21 +83,6 @@ void paintPixel(Uint32 *pixels, size_t mouseX, size_t mouseY, int brushSize, Uin
 
 void setCanvasBackground(Uint32 *pixels, Uint32 color) {
   memset(pixels, color, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
-}
-
-void printControls() {
-    FILE *helpfile = fopen("README.md","r");
-    if (helpfile) {
-        char textline[300];
-        while (!feof(helpfile)) {
-            fgets(textline, 300, helpfile);
-            puts(textline);
-        }
-    fclose(helpfile);
-    }
-    else {
-        puts("Can't open help file! Make sure it's present in the program directory.");
-    }
 }
 
 void copyPixels(Uint32 *pixels, Uint32 *undoPixels) {
@@ -118,8 +106,8 @@ void saveImage(Uint32 *pixels) {
 }
 
 // Read the hexdump from the specified file.
-void readImage(Uint32 *pixels) {
-  FILE *image = fopen("save.pix", "rb");
+void readImage(Uint32 *pixels,const char *fileName) {
+  FILE *image = fopen(fileName, "rb");
   if (image) {
     fseek(image, 0, SEEK_END);
     size_t size = ftell(image);
@@ -135,6 +123,21 @@ void readImage(Uint32 *pixels) {
   else {
     puts("Can't open specified sample. Please check if it's present in the program directory.");
   }
+}
+
+void printControls() {
+    FILE *helpfile = fopen("README.md","r");
+    if (helpfile) {
+        char textline[300];
+        while (!feof(helpfile)) {
+            fgets(textline, 300, helpfile);
+            puts(textline);
+        }
+    fclose(helpfile);
+    }
+    else {
+        puts("Can't open help file! Make sure it's present in the program directory.");
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -234,13 +237,29 @@ int main(int argc, char *argv[]) {
        case SDL_KEYDOWN:
        switch (event.key.keysym.sym) {
          case SDLK_1:
-            readImage(pixels);
+            readImage(pixels,"samples/sample1.pix");
+            menu.printColorMenu(pixels);
+            break;
+         case SDLK_2:
+            readImage(pixels,"samples/sample2.pix");
+            menu.printColorMenu(pixels);
+            break;
+         case SDLK_3:
+            readImage(pixels,"samples/sample3.pix");
+            menu.printColorMenu(pixels);
+            break;
+        case SDLK_4:
+            readImage(pixels,"samples/sample4.pix");
+            menu.printColorMenu(pixels);
             break;
          case SDLK_u:
             swapPixels(pixels, undoPixels);
             break;
          case SDLK_s:
             saveImage(pixels);
+            break;
+         case SDLK_l:
+            readImage(pixels,"save.pix");
             break;
          case SDLK_UP:
             currentColor -= 0x000500;
