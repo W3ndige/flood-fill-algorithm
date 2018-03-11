@@ -36,7 +36,6 @@ class Menu {
     }
 };
 
-// TODO(W3ndige): Experiment.
 // More efficient version of flood fill algorithm based on a queue.
 // https://en.wikipedia.org/wiki/Flood_fill#Alternative_implementations
 void queueFloodFill4(Uint32 *pixels, size_t mouseX, size_t mouseY, Uint32 oldColor, Uint32 newColor) {
@@ -90,7 +89,12 @@ void copyPixels(Uint32 *pixels, Uint32 *undoPixels) {
 }
 
 void swapPixels(Uint32 *pixels, Uint32 *undoPixels) {
+  Uint32 *tmpPixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT];
+  memcpy(tmpPixels, pixels, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
   memcpy(pixels, undoPixels, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
+  memcpy(undoPixels, tmpPixels, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
+  setCanvasBackground(tmpPixels, 255); // Overwrite the image from memory before making it free.
+  delete[] tmpPixels;
 }
 
 // Create a hexdump of an pixel array.
@@ -282,7 +286,7 @@ int main(int argc, char *argv[]) {
   }
 
   // Essential cleanup
-  setCanvasBackground(pixels, 255);
+  setCanvasBackground(pixels, 255); // Overwrite images from memory before making it free.
   setCanvasBackground(undoPixels, 255);
   delete[] pixels;
   delete[] undoPixels;
