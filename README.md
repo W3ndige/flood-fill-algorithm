@@ -11,7 +11,8 @@ Usage
 * `SCROLL_WHEEL` to change the brush size
 * `U` to undo or redo last operations
 * `S` to save the current image in a format of a hexdump
-* `1` to load the image
+* `L` to load from save
+* `1`, `2`, `3`, `4` to load the preset samples
 * `UP` or `DOW` keys make the color more or less blue
 
 License
