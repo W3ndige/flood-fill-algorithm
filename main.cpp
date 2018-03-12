@@ -34,6 +34,26 @@ class Menu {
         }
       }
     }
+    void printCurrentBrush(Uint32 *pixels, int brushSize, Uint32 currentColor) {
+      if (brushSize < 0) {
+        brushSize = 1;
+      }
+      if (brushSize > 10) {
+        brushSize = 10; // Maximum size
+      }
+      for (size_t i = MENU_HEIGHT / 2 - brushSize / 2; i <  MENU_HEIGHT / 2 - brushSize / 2 + brushSize - 1; i++) {
+        for (size_t j = (3 * MENU_HEIGHT / 2) - brushSize / 2; j < brushSize / 2 + (3 * MENU_HEIGHT / 2); j++) {
+          pixels[j + i * SCREEN_WIDTH] = currentColor;
+        }
+      }
+    }
+    void resetCurrentBrushBackground(Uint32 *pixels) {
+      for (size_t i = 0; i < MENU_HEIGHT; i++) {
+        for (size_t j = MENU_HEIGHT; j < 2* MENU_HEIGHT; j++) {
+          pixels[j + i * SCREEN_WIDTH] = COLORS[3];
+        }
+      }
+    }
 };
 
 // More efficient version of flood fill algorithm based on a queue.
@@ -66,7 +86,7 @@ void paintPixel(Uint32 *pixels, size_t mouseX, size_t mouseY, int brushSize, Uin
     brushSize = 1;
   }
   if (brushSize > 10) {
-    brushSize = 10; // Maximum size
+    brushSize = 10;
   }
 
   for (size_t i = mouseY; i < mouseY + brushSize; i++) {
@@ -191,6 +211,8 @@ int main(int argc, char *argv[]) {
 
      // Possible optimization?
      menu.printCurrentColor(pixels, currentColor);
+     menu.resetCurrentBrushBackground(pixels);
+     menu.printCurrentBrush(pixels,brushSize,currentColor);
      SDL_UpdateTexture(texture, NULL, pixels, SCREEN_WIDTH * sizeof(Uint32));
 
      switch (event.type) {
@@ -209,6 +231,7 @@ int main(int argc, char *argv[]) {
            case SDL_BUTTON_LEFT:
              leftMouseButton = true;
              copyPixels(pixels,undoPixels);
+             paintPixel(pixels, mouseX, mouseY, brushSize, currentColor);
              if (mouseX > SCREEN_WIDTH - MENU_HEIGHT && mouseX < SCREEN_WIDTH && mouseY > 0 && mouseY < MENU_HEIGHT) {
                currentColor = COLORS[0];
              }
