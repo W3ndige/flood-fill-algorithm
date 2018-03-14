@@ -1,19 +1,27 @@
 Simple Paint
 ============
 
-Presentation of the Flood Fill algorithm in a simple Paint program writeen in C++, using SDL2 library.
+Presentation of the Flood Fill algorithm in a simple Paint program written in C++, using SDL2 library.
+
+Description
+-----------
+
+Because of the drawbacks of using recursive version of algorithm, we decided to use the one based on the queue. First one made it impossible to fill the full version of screen, as the number of functions called was to much for the stack and the program crashed with `stack overflow` error. Instead the one using queue seemed to be much faster than the recursive version, as well as using much less resources.
+
+Firstly, we interpret 2D array of pixels as 1D array. Then we can access each pixels (X, Y) with simple formula `Y * screenWidth + X`. That's because the pixels are stored in such a format `[firstRow, firstRow, firstRow, secondRow, SecondRow, SecondRow, ...]`. In addition to only presenting the flood fill algorithm, we decided to implement some elements of the basic paint program, like painting pixels, changing colors, saving files and special function to load some predefined coloring pages.
 
 Usage
 -----
+
 * `RSHIFT` to clean the screen
 * `LEFT_MOUSE_BUTTON` to draw pixels
 * `RIGHT_MOUSE_BUTTON` to fill area with color
-* `SCROLL_WHEEL` to change the brush size
+* `SCROLL_WHEEL`, together with `+` and `-` keys to change the brush size
 * `U` to undo or redo last operations
 * `S` to save the current image in a format of a hexdump
 * `L` to load from save
 * `1`, `2`, `3`, `4` to load the preset samples
-* `UP` or `DOW` keys make the color more or less blue
+* `UP` or `DOWN` keys make the color more or less blue
 
 License
 -------

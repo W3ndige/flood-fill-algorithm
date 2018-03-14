@@ -3,9 +3,10 @@
 #include <queue>
 #include <SDL2/SDL.h>
 
-// TODO(W3ndige): Implement better brush algorithm.
-// TODO(W3ndige): Add option to choose between recursive and queue algorithms in the parameters.
 // TODO(W3ndige): Optimization.
+// TODO(W3ndige): Left side paintPixel bug.
+// TODO(W3ndige): Convert to 2D array.
+// TODO(W3ndige): PPM or image converters.
 
 const size_t SCREEN_WIDTH  = 720;
 const size_t SCREEN_HEIGHT = 480;
@@ -17,44 +18,47 @@ const Uint32 COLORS[NUMBER_OF_COLORS] = {0xFF000000, 0xC0C0C0, 0x808080, 0xFFFFF
 // Menu object that will work for the line of 30 pixels height, at the top of the window.
 class Menu {
   public:
-    void printCurrentColor(Uint32 *pixels, Uint32 currentColor) {
-      for (size_t i = 0; i < MENU_HEIGHT; i++) {
-        for (size_t j = 0; j < MENU_HEIGHT; j++) {
-          pixels[j + i * SCREEN_WIDTH] = currentColor;
-        }
-      }
-    }
-    void printColorMenu(Uint32 *pixels) {
-      for (size_t i = 0; i < sizeof(COLORS)/sizeof(COLORS[0]); i++) {
-        size_t offset = MENU_HEIGHT * i;
-        for (size_t j = 0; j < MENU_HEIGHT; j++) {
-          for (size_t k = 720 - offset; k > (720 - MENU_HEIGHT - offset); k--) {
-            pixels[k + j * SCREEN_WIDTH] = COLORS[i];
-          }
-        }
-      }
-    }
-    void printCurrentBrush(Uint32 *pixels, int brushSize, Uint32 currentColor) {
-      if (brushSize < 0) {
-        brushSize = 1;
-      }
-      if (brushSize > 10) {
-        brushSize = 10; // Maximum size
-      }
-      for (size_t i = MENU_HEIGHT / 2 - brushSize / 2; i <  MENU_HEIGHT / 2 - brushSize / 2 + brushSize - 1; i++) {
-        for (size_t j = (3 * MENU_HEIGHT / 2) - brushSize / 2; j < brushSize / 2 + (3 * MENU_HEIGHT / 2); j++) {
-          pixels[j + i * SCREEN_WIDTH] = currentColor;
-        }
-      }
-    }
-    void resetCurrentBrushBackground(Uint32 *pixels) {
-      for (size_t i = 0; i < MENU_HEIGHT; i++) {
-        for (size_t j = MENU_HEIGHT; j < 2* MENU_HEIGHT; j++) {
-          pixels[j + i * SCREEN_WIDTH] = COLORS[3];
-        }
-      }
-    }
+    void printCurrentColor(Uint32 *, Uint32);
+    void printColorMenu(Uint32 *);
+    void printCurrentBrush(Uint32 *, int, Uint32);
+    void resetCurrentBrushBackground(Uint32 *);
 };
+
+void Menu::printCurrentColor(Uint32 *pixels, Uint32 currentColor) {
+  for (size_t i = 0; i < MENU_HEIGHT; i++) {
+    for (size_t j = 0; j < MENU_HEIGHT; j++) {
+      pixels[j + i * SCREEN_WIDTH] = currentColor;
+    }
+  }
+}
+
+void Menu::printColorMenu(Uint32 *pixels) {
+  for (size_t i = 0; i < sizeof(COLORS)/sizeof(COLORS[0]); i++) {
+    size_t offset = MENU_HEIGHT * i;
+    for (size_t j = 0; j < MENU_HEIGHT; j++) {
+      for (size_t k = SCREEN_WIDTH - offset; k > (SCREEN_WIDTH - MENU_HEIGHT - offset); k--) {
+        pixels[k + j * SCREEN_WIDTH] = COLORS[i];
+      }
+    }
+  }
+}
+
+void Menu::printCurrentBrush(Uint32 *pixels, int brushSize, Uint32 currentColor) {
+  for (size_t i = MENU_HEIGHT / 2 - brushSize / 2; i <  MENU_HEIGHT / 2 - brushSize / 2 + brushSize - 1; i++) {
+    for (size_t j = (3 * MENU_HEIGHT / 2) - brushSize / 2; j < brushSize / 2 + (3 * MENU_HEIGHT / 2); j++) {
+      pixels[j + i * SCREEN_WIDTH] = currentColor;
+    }
+  }
+}
+
+void Menu::resetCurrentBrushBackground(Uint32 *pixels) {
+  for (size_t i = 0; i < MENU_HEIGHT; i++) {
+    for (size_t j = MENU_HEIGHT; j < 2* MENU_HEIGHT; j++) {
+      pixels[j + i * SCREEN_WIDTH] = COLORS[3];
+    }
+  }
+}
+
 
 // More efficient version of flood fill algorithm based on a queue.
 // https://en.wikipedia.org/wiki/Flood_fill#Alternative_implementations
@@ -82,17 +86,10 @@ void queueFloodFill4(Uint32 *pixels, size_t mouseX, size_t mouseY, Uint32 oldCol
 
 // Paint pixels with according size.
 void paintPixel(Uint32 *pixels, size_t mouseX, size_t mouseY, int brushSize, Uint32 currentColor) {
-  if (brushSize < 0) {
-    brushSize = 1;
-  }
-  if (brushSize > 10) {
-    brushSize = 10;
-  }
-
-  for (size_t i = mouseY; i < mouseY + brushSize; i++) {
-    if (i >= MENU_HEIGHT) {
-      for (size_t j = mouseX; j < mouseX + brushSize; j++) {
-        if ((j + i * SCREEN_WIDTH) <= SCREEN_HEIGHT * SCREEN_WIDTH && (j + i * SCREEN_WIDTH) < ((i + 1)* SCREEN_WIDTH)) {
+  if (mouseY > MENU_HEIGHT) {
+    for (size_t i = (mouseY - brushSize / 2); i < mouseY + brushSize / 2; i++) {
+      for (size_t j = (mouseX - brushSize / 2); j < mouseX + brushSize / 2; j++) {
+        if ((j + i * SCREEN_WIDTH) <= SCREEN_HEIGHT * SCREEN_WIDTH && (j + i * SCREEN_WIDTH) < ((i + 1) * SCREEN_WIDTH)) {
           pixels[j + i * SCREEN_WIDTH] = currentColor;
         }
       }
@@ -136,7 +133,7 @@ void readImage(Uint32 *pixels,const char *fileName) {
     fseek(image, 0, SEEK_END);
     size_t size = ftell(image);
     fseek(image, 0, SEEK_SET);
-    if (size == SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32)) { // Protect from loading to big files.
+    if (size <= SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32)) { // Protect from loading to big files.
       fread(pixels, sizeof(Uint32),SCREEN_WIDTH * SCREEN_HEIGHT, image);
       fclose(image);
     }
@@ -255,10 +252,14 @@ int main(int argc, char *argv[]) {
          break;
        case SDL_MOUSEWHEEL: // Paint brush size change, incremented or decremented while rolling mouse wheel.
          if (event.wheel.y == 1) {
-           brushSize++;
+           if (brushSize < 10) {
+             brushSize++;
+          }
          }
          else if (event.wheel.y == -1) {
-           brushSize--;
+           if (brushSize > 3) {
+            brushSize--;
+           }
          }
          break;
        case SDL_KEYDOWN:
@@ -293,6 +294,16 @@ int main(int argc, char *argv[]) {
             break;
          case SDLK_DOWN:
             currentColor += 0x000500;
+            break;
+         case SDLK_KP_PLUS:
+            if (brushSize < 10) {
+              brushSize++;
+            }
+            break;
+         case SDLK_KP_MINUS:
+             if (brushSize > 3) {
+               brushSize--;
+             }
             break;
          case SDLK_RSHIFT: // Reset the canvas.
            copyPixels(pixels, undoPixels);
