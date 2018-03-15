@@ -4,7 +4,6 @@
 #include <SDL2/SDL.h>
 
 // TODO(W3ndige): Optimization.
-// TODO(W3ndige): Left side paintPixel bug.
 // TODO(W3ndige): Convert to 2D array.
 // TODO(W3ndige): PPM or image converters.
 
@@ -59,7 +58,6 @@ void Menu::resetCurrentBrushBackground(Uint32 *pixels) {
   }
 }
 
-
 // More efficient version of flood fill algorithm based on a queue.
 // https://en.wikipedia.org/wiki/Flood_fill#Alternative_implementations
 void queueFloodFill4(Uint32 *pixels, size_t mouseX, size_t mouseY, Uint32 oldColor, Uint32 newColor) {
@@ -88,7 +86,7 @@ void queueFloodFill4(Uint32 *pixels, size_t mouseX, size_t mouseY, Uint32 oldCol
 void paintPixel(Uint32 *pixels, size_t mouseX, size_t mouseY, int brushSize, Uint32 currentColor) {
   if (mouseY > MENU_HEIGHT) {
     for (size_t i = (mouseY - brushSize / 2); i < mouseY + brushSize / 2; i++) {
-      for (size_t j = (mouseX - brushSize / 2); j < mouseX + brushSize / 2; j++) {
+      for (size_t j = (int) mouseX - brushSize / 2 < 0 ? 0 : mouseX - brushSize / 2; j < mouseX + brushSize / 2; j++) {
         if ((j + i * SCREEN_WIDTH) <= SCREEN_HEIGHT * SCREEN_WIDTH && (j + i * SCREEN_WIDTH) < ((i + 1) * SCREEN_WIDTH)) {
           pixels[j + i * SCREEN_WIDTH] = currentColor;
         }
@@ -115,8 +113,8 @@ void swapPixels(Uint32 *pixels, Uint32 *undoPixels) {
 }
 
 // Create a hexdump of an pixel array.
-void saveImage(Uint32 *pixels) {
-  FILE *image = fopen("save.pix", "wb");
+void saveImage(Uint32 *pixels, const char *fileName) {
+  FILE *image = fopen(fileName, "wb");
   if (image) {
     fwrite(pixels, sizeof(Uint32),SCREEN_WIDTH * SCREEN_HEIGHT, image);
     fclose(image);
@@ -127,7 +125,7 @@ void saveImage(Uint32 *pixels) {
 }
 
 // Read the hexdump from the specified file.
-void readImage(Uint32 *pixels,const char *fileName) {
+void readImage(Uint32 *pixels, const char *fileName) {
   FILE *image = fopen(fileName, "rb");
   if (image) {
     fseek(image, 0, SEEK_END);
@@ -143,6 +141,19 @@ void readImage(Uint32 *pixels,const char *fileName) {
   }
   else {
     puts("Can't open specified sample. Please check if it's present in the program directory.");
+  }
+}
+
+void saveManager(Uint32 *pixels, int saveState, const char *fileName, const char *sampleName) {
+  if (saveState == 1) {
+    saveImage(pixels, fileName);
+    saveState = false;
+  }
+  else if (saveState == 2) {
+    readImage(pixels, fileName);
+  }
+  else if (saveState == 3) {
+    readImage(pixels, sampleName);
   }
 }
 
@@ -163,7 +174,7 @@ void printControls() {
 
 int main(int argc, char *argv[]) {
   // Initialize SDL2.
- if( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
+ if (SDL_Init(SDL_INIT_VIDEO) < 0) {
    printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
    SDL_Quit();
    return 1;
@@ -192,6 +203,7 @@ int main(int argc, char *argv[]) {
  // Essential variables
  bool end = false;
  bool leftMouseButton = false;
+ int saveState = 3;
  Uint32 currentColor = 0;
  int brushSize = 5;
 
@@ -265,29 +277,33 @@ int main(int argc, char *argv[]) {
        case SDL_KEYDOWN:
        switch (event.key.keysym.sym) {
          case SDLK_1:
-            readImage(pixels,"samples/sample1.pix");
+            saveManager(pixels, saveState, "save1.pix", "samples/sample1.pix");
+            saveState = 3;
             menu.printColorMenu(pixels);
             break;
          case SDLK_2:
-            readImage(pixels,"samples/sample2.pix");
+            saveManager(pixels, saveState, "save2.pix", "samples/sample2.pix");
+            saveState = 3;
             menu.printColorMenu(pixels);
             break;
          case SDLK_3:
-            readImage(pixels,"samples/sample3.pix");
+            saveManager(pixels, saveState, "save3.pix", "samples/sample3.pix");
+            saveState = 3;
             menu.printColorMenu(pixels);
             break;
         case SDLK_4:
-            readImage(pixels,"samples/sample4.pix");
+            saveManager(pixels, saveState, "save4.pix", "samples/sample4.pix");
+            saveState = 3;
             menu.printColorMenu(pixels);
             break;
          case SDLK_u:
             swapPixels(pixels, undoPixels);
             break;
          case SDLK_s:
-            saveImage(pixels);
+            saveState = 1;
             break;
          case SDLK_l:
-            readImage(pixels,"save.pix");
+            saveState = 2;
             break;
          case SDLK_UP:
             currentColor -= 0x000500;
