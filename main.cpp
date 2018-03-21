@@ -3,6 +3,7 @@
 #include <queue>
 #include <SDL2/SDL.h>
 
+// TODO(W3ndige): Pixel on the left top corner is created while using printColorMenu.
 // TODO(W3ndige): Optimization.
 // TODO(W3ndige): Convert to 2D array.
 // TODO(W3ndige): PPM or image converters.
@@ -36,7 +37,9 @@ void Menu::printColorMenu(Uint32 *pixels) {
     size_t offset = MENU_HEIGHT * i;
     for (size_t j = 0; j < MENU_HEIGHT; j++) {
       for (size_t k = SCREEN_WIDTH - offset; k > (SCREEN_WIDTH - MENU_HEIGHT - offset); k--) {
-        pixels[k + j * SCREEN_WIDTH] = COLORS[i];
+        if (k < SCREEN_WIDTH) {
+          pixels[k + j * SCREEN_WIDTH] = COLORS[i];
+        }
       }
     }
   }
@@ -93,6 +96,10 @@ void paintPixel(Uint32 *pixels, size_t mouseX, size_t mouseY, int brushSize, Uin
       }
     }
   }
+}
+
+Uint32 colorPicker(Uint32 *pixels, size_t mouseX, size_t mouseY) {
+  return pixels[mouseY * SCREEN_WIDTH + mouseX];
 }
 
 void setCanvasBackground(Uint32 *pixels, Uint32 color) {
@@ -304,6 +311,9 @@ int main(int argc, char *argv[]) {
             break;
          case SDLK_l:
             saveState = 2;
+            break;
+         case SDLK_p:
+            currentColor = colorPicker(pixels, mouseX, mouseY);
             break;
          case SDLK_UP:
             currentColor -= 0x000500;
