@@ -1,10 +1,8 @@
+#include <queue>
 #include <stdio.h>
 #include <string.h>
-#include <queue>
 #include <SDL2/SDL.h>
 
-// TODO(W3ndige): Pixel on the left top corner is created while using printColorMenu.
-// TODO(W3ndige): Optimization.
 // TODO(W3ndige): Convert to 2D array.
 // TODO(W3ndige): PPM or image converters.
 
@@ -90,7 +88,7 @@ void paintPixel(Uint32 *pixels, size_t mouseX, size_t mouseY, int brushSize, Uin
   if (mouseY > MENU_HEIGHT) {
     for (size_t i = (mouseY - brushSize / 2); i < mouseY + brushSize / 2; i++) {
       for (size_t j = (int) mouseX - brushSize / 2 < 0 ? 0 : mouseX - brushSize / 2; j < mouseX + brushSize / 2; j++) {
-        if ((j + i * SCREEN_WIDTH) <= SCREEN_HEIGHT * SCREEN_WIDTH && (j + i * SCREEN_WIDTH) < ((i + 1) * SCREEN_WIDTH)) {
+        if ((j + i * SCREEN_WIDTH) <= SCREEN_HEIGHT * SCREEN_WIDTH && (j + i * SCREEN_WIDTH) < ((i + 1) * SCREEN_WIDTH) && (j + i * SCREEN_WIDTH) >= (SCREEN_WIDTH * MENU_HEIGHT)) {
           pixels[j + i * SCREEN_WIDTH] = currentColor;
         }
       }
@@ -165,7 +163,7 @@ void saveManager(Uint32 *pixels, int saveState, const char *fileName, const char
 }
 
 void printControls() {
-    FILE *helpfile = fopen("README.md","r");
+    FILE *helpfile = fopen("controls.md","r");
     if (helpfile) {
         char textline[300];
         while (!feof(helpfile)) {
@@ -223,7 +221,7 @@ int main(int argc, char *argv[]) {
  size_t mouseY = 0;
 
  while (!end) {
-   while (SDL_PollEvent(&event)) {
+   if (SDL_WaitEvent(&event)) {
 
      // Possible optimization?
      menu.printCurrentColor(pixels, currentColor);
@@ -284,25 +282,51 @@ int main(int argc, char *argv[]) {
        case SDL_KEYDOWN:
        switch (event.key.keysym.sym) {
          case SDLK_1:
-            saveManager(pixels, saveState, "save1.pix", "samples/sample1.pix");
+            saveManager(pixels, saveState, "saves/save1.pix", "samples/sample1.pix");
             saveState = 3;
             menu.printColorMenu(pixels);
             break;
          case SDLK_2:
-            saveManager(pixels, saveState, "save2.pix", "samples/sample2.pix");
+            saveManager(pixels, saveState, "saves/save2.pix", "samples/sample2.pix");
             saveState = 3;
             menu.printColorMenu(pixels);
             break;
          case SDLK_3:
-            saveManager(pixels, saveState, "save3.pix", "samples/sample3.pix");
+            saveManager(pixels, saveState, "saves/save3.pix", "samples/sample3.pix");
             saveState = 3;
             menu.printColorMenu(pixels);
             break;
         case SDLK_4:
-            saveManager(pixels, saveState, "save4.pix", "samples/sample4.pix");
+            saveManager(pixels, saveState, "saves/save4.pix", "samples/sample4.pix");
             saveState = 3;
             menu.printColorMenu(pixels);
             break;
+        case SDLK_5:
+            saveManager(pixels, saveState, "saves/save5.pix", "samples/sample5.pix");
+            saveState = 3;
+            menu.printColorMenu(pixels);
+            break;
+        case SDLK_6:
+            saveManager(pixels, saveState, "saves/save6.pix", "samples/sample6.pix");
+            saveState = 3;
+            menu.printColorMenu(pixels);
+            break;
+        case SDLK_7:
+            saveManager(pixels, saveState, "saves/save7.pix", "samples/sample7.pix");
+            saveState = 3;
+            menu.printColorMenu(pixels);
+            break;
+        case SDLK_8:
+            saveManager(pixels, saveState, "saves/save8.pix", "samples/sample8.pix");
+            saveState = 3;
+            menu.printColorMenu(pixels);
+            break;
+        case SDLK_9:
+            saveManager(pixels, saveState, "saves/save9.pix", "samples/sample9.pix");
+            saveState = 3;
+            menu.printColorMenu(pixels);
+            break;
+
          case SDLK_u:
             swapPixels(pixels, undoPixels);
             break;
@@ -338,11 +362,11 @@ int main(int argc, char *argv[]) {
            break;
        }
        break;
-      }
+     }
+     SDL_RenderClear(renderer);
+     SDL_RenderCopy(renderer, texture, NULL, NULL);
+     SDL_RenderPresent(renderer);
     }
-    SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
-    SDL_RenderPresent(renderer);
   }
 
   // Essential cleanup
