@@ -1,4 +1,5 @@
 #include <queue>
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <SDL2/SDL.h>
@@ -92,6 +93,32 @@ void paintPixel(Uint32 *pixels, size_t mouseX, size_t mouseY, int brushSize, Uin
           pixels[j + i * SCREEN_WIDTH] = currentColor;
         }
       }
+    }
+  }
+}
+
+// https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+void paintLine(Uint32 *pixels, size_t startMouseX, size_t startMouseY, size_t endMouseX, size_t endMouseY, int brushSize, Uint32 currentColor) {
+  int dx = abs((int)(endMouseX - startMouseX));
+  int dy = -abs((int)(endMouseY - startMouseY));
+  int sx = startMouseX < endMouseX ? 1 : -1;
+  int sy = startMouseY < endMouseY ? 1 : -1;
+  int derror = dx + dy;
+  int e2;
+
+  for (;;) {
+    paintPixel(pixels, startMouseX, startMouseY, brushSize, currentColor);
+    if (startMouseX == endMouseX && startMouseY == endMouseY) {
+      break;
+    }
+    e2 = 2 * derror;
+    if (e2 >= dy) {
+      derror += dy;
+      startMouseX += sx;
+    }
+    if (e2 <= dx) {
+      derror += dx;
+      startMouseY += sy;
     }
   }
 }
@@ -208,6 +235,7 @@ int main(int argc, char *argv[]) {
  // Essential variables
  bool end = false;
  bool leftMouseButton = false;
+ bool draw_line = false;
  int saveState = 3;
  Uint32 currentColor = 0;
  int brushSize = 5;
@@ -219,6 +247,8 @@ int main(int argc, char *argv[]) {
 
  size_t mouseX = 0;
  size_t mouseY = 0;
+ size_t tmpMouseX = 0;
+ size_t tmpMouseY = 0;
 
  while (!end) {
    if (SDL_WaitEvent(&event)) {
@@ -250,9 +280,9 @@ int main(int argc, char *argv[]) {
                currentColor = COLORS[0];
              }
              for (size_t i = 1; i <= NUMBER_OF_COLORS - 1; i++) {
-                if (mouseX > SCREEN_WIDTH - (i + 1) * MENU_HEIGHT && mouseX < SCREEN_WIDTH - i * MENU_HEIGHT && mouseY > 0 && mouseY < MENU_HEIGHT) {
-                    currentColor = COLORS[i];
-                }
+               if (mouseX > SCREEN_WIDTH - (i + 1) * MENU_HEIGHT && mouseX < SCREEN_WIDTH - i * MENU_HEIGHT && mouseY > 0 && mouseY < MENU_HEIGHT) {
+                   currentColor = COLORS[i];
+               }
              }
              break;
            case SDL_BUTTON_RIGHT:
@@ -326,7 +356,6 @@ int main(int argc, char *argv[]) {
             saveState = 3;
             menu.printColorMenu(pixels);
             break;
-
          case SDLK_u:
             swapPixels(pixels, undoPixels);
             break;
@@ -338,6 +367,17 @@ int main(int argc, char *argv[]) {
             break;
          case SDLK_p:
             currentColor = colorPicker(pixels, mouseX, mouseY);
+            break;
+         case SDLK_d:
+            if (draw_line == false) {
+              tmpMouseX = mouseX;
+              tmpMouseY = mouseY;
+              draw_line = true;
+            }
+            else {
+              paintLine(pixels, tmpMouseX, tmpMouseY, mouseX, mouseY, brushSize, currentColor);
+              draw_line = false;
+            }
             break;
          case SDLK_UP:
             currentColor -= 0x000500;
