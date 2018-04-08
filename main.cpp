@@ -6,6 +6,7 @@
 
 // TODO(W3ndige): Convert to 2D array.
 // TODO(W3ndige): PPM or image converters.
+// TODO(W3ndige): Modify straght line drawing in order to allow chaining lines.
 
 const size_t SCREEN_WIDTH  = 720;
 const size_t SCREEN_HEIGHT = 480;
@@ -104,14 +105,14 @@ void paintLine(Uint32 *pixels, size_t startMouseX, size_t startMouseY, size_t en
   int sx = startMouseX < endMouseX ? 1 : -1;
   int sy = startMouseY < endMouseY ? 1 : -1;
   int derror = dx + dy;
-  int e2;
+  bool end = false;
 
-  for (;;) {
+  while (!end) {
     paintPixel(pixels, startMouseX, startMouseY, brushSize, currentColor);
     if (startMouseX == endMouseX && startMouseY == endMouseY) {
-      break;
+      end = true;
     }
-    e2 = 2 * derror;
+    int e2 = 2 * derror;
     if (e2 >= dy) {
       derror += dy;
       startMouseX += sx;
@@ -235,7 +236,9 @@ int main(int argc, char *argv[]) {
  // Essential variables
  bool end = false;
  bool leftMouseButton = false;
- bool draw_line = false;
+ bool dKeyPressed = false;
+ bool drawLineFirstPoint = false;
+ bool drawLineEndPoint = false;
  int saveState = 3;
  Uint32 currentColor = 0;
  int brushSize = 5;
@@ -269,10 +272,26 @@ int main(int argc, char *argv[]) {
          if (leftMouseButton) {
            paintPixel(pixels, mouseX, mouseY, brushSize, currentColor);
          }
+         if (drawLineFirstPoint && (!drawLineEndPoint)) {
+             copyPixels(undoPixels, pixels);
+              paintLine(pixels, tmpMouseX, tmpMouseY, mouseX, mouseY, brushSize, currentColor);
+         }
          break;
        case SDL_MOUSEBUTTONDOWN:
          switch (event.button.button) {
-           case SDL_BUTTON_LEFT:
+             case SDL_BUTTON_LEFT:
+             if (dKeyPressed) {
+                 tmpMouseX = mouseX;
+                 tmpMouseY = mouseY;
+                 drawLineFirstPoint = true;
+                 dKeyPressed = false;
+                 break;
+             }
+             if (drawLineFirstPoint) {
+                 drawLineFirstPoint = false;
+                 drawLineEndPoint = true;
+                 break;
+             }
              leftMouseButton = true;
              copyPixels(pixels,undoPixels);
              paintPixel(pixels, mouseX, mouseY, brushSize, currentColor);
@@ -369,14 +388,22 @@ int main(int argc, char *argv[]) {
             currentColor = colorPicker(pixels, mouseX, mouseY);
             break;
          case SDLK_d:
-            if (draw_line == false) {
-              tmpMouseX = mouseX;
-              tmpMouseY = mouseY;
-              draw_line = true;
+            if (drawLineFirstPoint == true && drawLineEndPoint == false) {
+              drawLineFirstPoint = false;
+              swapPixels (pixels, undoPixels);
+              break;
             }
-            else {
-              paintLine(pixels, tmpMouseX, tmpMouseY, mouseX, mouseY, brushSize, currentColor);
-              draw_line = false;
+            if (drawLineEndPoint) {
+              drawLineEndPoint = false;
+            }
+            if (!dKeyPressed) {
+              dKeyPressed = true;
+              copyPixels(pixels,undoPixels);
+              break;
+            }
+            if (dKeyPressed) {
+              dKeyPressed = false;
+              break;
             }
             break;
          case SDLK_UP:
