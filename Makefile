@@ -1,4 +1,4 @@
-OBJS = main.cpp
+OBJS = src/main.cpp
 CC = g++
 COMPILER_FLAGS = -Wall -Wextra
 LINKER_FLAGS = -lSDL2

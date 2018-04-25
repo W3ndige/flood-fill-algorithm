@@ -100,11 +100,11 @@ void paintPixel(Uint32 *pixels, size_t mouseX, size_t mouseY, int brushSize, Uin
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 void paintLine(Uint32 *pixels, size_t startMouseX, size_t startMouseY, size_t endMouseX, size_t endMouseY, int brushSize, Uint32 currentColor) {
-  int dx = abs((int)(endMouseX - startMouseX));
-  int dy = -abs((int)(endMouseY - startMouseY));
-  int sx = startMouseX < endMouseX ? 1 : -1;
-  int sy = startMouseY < endMouseY ? 1 : -1;
-  int derror = dx + dy;
+  int deltaX = abs((int)(endMouseX - startMouseX));
+  int deltaY = -abs((int)(endMouseY - startMouseY));
+  int startX = startMouseX < endMouseX ? 1 : -1;
+  int startY = startMouseY < endMouseY ? 1 : -1;
+  int deltaError = deltaX + deltaY;
   bool end = false;
 
   while (!end) {
@@ -112,14 +112,14 @@ void paintLine(Uint32 *pixels, size_t startMouseX, size_t startMouseY, size_t en
     if (startMouseX == endMouseX && startMouseY == endMouseY) {
       end = true;
     }
-    int e2 = 2 * derror;
-    if (e2 >= dy) {
-      derror += dy;
-      startMouseX += sx;
+    int e2 = 2 * deltaError;
+    if (e2 >= deltaY) {
+      deltaError += deltaY;
+      startMouseX += startX;
     }
-    if (e2 <= dx) {
-      derror += dx;
-      startMouseY += sy;
+    if (e2 <= deltaX) {
+      deltaError += deltaX;
+      startMouseY += startY;
     }
   }
 }
