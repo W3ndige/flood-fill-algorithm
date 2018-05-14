@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <SDL2/SDL.h>
+#include "menu.h"
+#include "drawing.h"
+#include "gadgets.h"
+#include "files.h"
 
 // TODO(W3ndige): Convert to 2D array.
 // TODO(W3ndige): PPM or image converters.
@@ -14,196 +18,6 @@ const size_t MENU_HEIGHT = 30;
 const size_t NUMBER_OF_COLORS = 20;
 
 const Uint32 COLORS[NUMBER_OF_COLORS] = {0xFF000000, 0xC0C0C0, 0x808080, 0xFFFFFF, 0x800000, 0xFF0000, 0xFFA500, 0x800080, 0xC969FF, 0xFF69B4, 0x008000, 0x08E100, 0x93FF2D, 0xC3C355, 0xFFFF00, 0xFFFF83, 0x000080, 0x0000FF, 0x008080, 0x00FFFF};
-
-// Menu object that will work for the line of 30 pixels height, at the top of the window.
-class Menu {
-  public:
-    void printCurrentColor(Uint32 *, Uint32);
-    void printColorMenu(Uint32 *);
-    void printCurrentBrush(Uint32 *, int, Uint32);
-    void resetCurrentBrushBackground(Uint32 *);
-};
-
-void Menu::printCurrentColor(Uint32 *pixels, Uint32 currentColor) {
-  for (size_t i = 0; i < MENU_HEIGHT; i++) {
-    for (size_t j = 0; j < MENU_HEIGHT; j++) {
-      pixels[j + i * SCREEN_WIDTH] = currentColor;
-    }
-  }
-}
-
-void Menu::printColorMenu(Uint32 *pixels) {
-  for (size_t i = 0; i < sizeof(COLORS)/sizeof(COLORS[0]); i++) {
-    size_t offset = MENU_HEIGHT * i;
-    for (size_t j = 0; j < MENU_HEIGHT; j++) {
-      for (size_t k = SCREEN_WIDTH - offset; k > (SCREEN_WIDTH - MENU_HEIGHT - offset); k--) {
-        if (k < SCREEN_WIDTH) {
-          pixels[k + j * SCREEN_WIDTH] = COLORS[i];
-        }
-      }
-    }
-  }
-}
-
-void Menu::printCurrentBrush(Uint32 *pixels, int brushSize, Uint32 currentColor) {
-  for (size_t i = MENU_HEIGHT / 2 - brushSize / 2; i <  MENU_HEIGHT / 2 - brushSize / 2 + brushSize - 1; i++) {
-    for (size_t j = (3 * MENU_HEIGHT / 2) - brushSize / 2; j < brushSize / 2 + (3 * MENU_HEIGHT / 2); j++) {
-      pixels[j + i * SCREEN_WIDTH] = currentColor;
-    }
-  }
-}
-
-void Menu::resetCurrentBrushBackground(Uint32 *pixels) {
-  for (size_t i = 0; i < MENU_HEIGHT; i++) {
-    for (size_t j = MENU_HEIGHT; j < 2* MENU_HEIGHT; j++) {
-      pixels[j + i * SCREEN_WIDTH] = COLORS[3];
-    }
-  }
-}
-
-// More efficient version of flood fill algorithm based on a queue.
-// https://en.wikipedia.org/wiki/Flood_fill#Alternative_implementations
-void queueFloodFill4(Uint32 *pixels, size_t mouseX, size_t mouseY, Uint32 oldColor, Uint32 newColor) {
-  if (newColor == pixels[mouseY * SCREEN_WIDTH + mouseX]) {
-    return;
-  }
-
-  struct coordinates { size_t mouseX, mouseY;};
-  std::queue<coordinates> fill;
-  fill.push({mouseX, mouseY});
-
-  while (!fill.empty()) {
-    coordinates top = fill.front();
-    fill.pop();
-    if (top.mouseX < SCREEN_WIDTH && top.mouseY >= MENU_HEIGHT && top.mouseY < SCREEN_HEIGHT && pixels[top.mouseY * SCREEN_WIDTH + top.mouseX] == oldColor) {
-        pixels[top.mouseY * SCREEN_WIDTH + top.mouseX] = newColor;
-        fill.push({top.mouseX + 1, top.mouseY});
-        fill.push({top.mouseX, top.mouseY + 1});
-        fill.push({top.mouseX - 1, top.mouseY});
-        fill.push({top.mouseX, top.mouseY - 1});
-    }
-  }
-}
-
-// Paint pixels with according size.
-void paintPixel(Uint32 *pixels, size_t mouseX, size_t mouseY, int brushSize, Uint32 currentColor) {
-  if (mouseY > MENU_HEIGHT) {
-    for (size_t i = (mouseY - brushSize / 2); i < mouseY + brushSize / 2; i++) {
-      for (size_t j = (int) mouseX - brushSize / 2 < 0 ? 0 : mouseX - brushSize / 2; j < mouseX + brushSize / 2; j++) {
-        if ((j + i * SCREEN_WIDTH) <= SCREEN_HEIGHT * SCREEN_WIDTH && (j + i * SCREEN_WIDTH) < ((i + 1) * SCREEN_WIDTH) && (j + i * SCREEN_WIDTH) >= (SCREEN_WIDTH * MENU_HEIGHT)) {
-          pixels[j + i * SCREEN_WIDTH] = currentColor;
-        }
-      }
-    }
-  }
-}
-
-// https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-void paintLine(Uint32 *pixels, size_t startMouseX, size_t startMouseY, size_t endMouseX, size_t endMouseY, int brushSize, Uint32 currentColor) {
-  int deltaX = abs((int)(endMouseX - startMouseX));
-  int deltaY = -abs((int)(endMouseY - startMouseY));
-  int startX = startMouseX < endMouseX ? 1 : -1;
-  int startY = startMouseY < endMouseY ? 1 : -1;
-  int deltaError = deltaX + deltaY;
-  bool end = false;
-
-  while (!end) {
-    paintPixel(pixels, startMouseX, startMouseY, brushSize, currentColor);
-    if (startMouseX == endMouseX && startMouseY == endMouseY) {
-      end = true;
-    }
-    int e2 = 2 * deltaError;
-    if (e2 >= deltaY) {
-      deltaError += deltaY;
-      startMouseX += startX;
-    }
-    if (e2 <= deltaX) {
-      deltaError += deltaX;
-      startMouseY += startY;
-    }
-  }
-}
-
-Uint32 colorPicker(Uint32 *pixels, size_t mouseX, size_t mouseY) {
-  return pixels[mouseY * SCREEN_WIDTH + mouseX];
-}
-
-void setCanvasBackground(Uint32 *pixels, Uint32 color) {
-  memset(pixels, color, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
-}
-
-void copyPixels(Uint32 *pixels, Uint32 *undoPixels) {
-  memcpy(undoPixels, pixels, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
-}
-
-void swapPixels(Uint32 *pixels, Uint32 *undoPixels) {
-  Uint32 *tmpPixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT];
-  memcpy(tmpPixels, pixels, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
-  memcpy(pixels, undoPixels, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
-  memcpy(undoPixels, tmpPixels, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
-  setCanvasBackground(tmpPixels, 255); // Overwrite the image from memory before making it free.
-  delete[] tmpPixels;
-}
-
-// Create a hexdump of an pixel array.
-void saveImage(Uint32 *pixels, const char *fileName) {
-  FILE *image = fopen(fileName, "wb");
-  if (image) {
-    fwrite(pixels, sizeof(Uint32),SCREEN_WIDTH * SCREEN_HEIGHT, image);
-    fclose(image);
-  }
-  else {
-    puts("Can't open specified sample. Please check if it's present in the program directory.");
-  }
-}
-
-// Read the hexdump from the specified file.
-void readImage(Uint32 *pixels, const char *fileName) {
-  FILE *image = fopen(fileName, "rb");
-  if (image) {
-    fseek(image, 0, SEEK_END);
-    size_t size = ftell(image);
-    fseek(image, 0, SEEK_SET);
-    if (size <= SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32)) { // Protect from loading to big files.
-      fread(pixels, sizeof(Uint32),SCREEN_WIDTH * SCREEN_HEIGHT, image);
-      fclose(image);
-    }
-    else {
-      puts("Input file is too large for the specified screen dimensions.");
-    }
-  }
-  else {
-    puts("Can't open specified sample. Please check if it's present in the program directory.");
-  }
-}
-
-void saveManager(Uint32 *pixels, int saveState, const char *fileName, const char *sampleName) {
-  if (saveState == 1) {
-    saveImage(pixels, fileName);
-    saveState = false;
-  }
-  else if (saveState == 2) {
-    readImage(pixels, fileName);
-  }
-  else if (saveState == 3) {
-    readImage(pixels, sampleName);
-  }
-}
-
-void printControls() {
-    FILE *helpfile = fopen("controls.md","r");
-    if (helpfile) {
-        char textline[300];
-        while (!feof(helpfile)) {
-            fgets(textline, 300, helpfile);
-            puts(textline);
-        }
-    fclose(helpfile);
-    }
-    else {
-        puts("Can't open help file! Make sure it's present in the program directory.");
-    }
-}
 
 int main(int argc, char *argv[]) {
   // Initialize SDL2.
@@ -239,13 +53,16 @@ int main(int argc, char *argv[]) {
  bool dKeyPressed = false;
  bool drawLineFirstPoint = false;
  bool drawLineEndPoint = false;
+ bool drawCircleFirstPoint = false;
+ bool drawCircleEndPoint = false;
+ bool cKeyPressed = false;
+ bool stopRender = false;
  int saveState = 3;
  Uint32 currentColor = 0;
  int brushSize = 5;
 
  SDL_Event event;
- Menu menu;
- menu.printColorMenu(pixels); // Don't need to update this part of menu.
+ printColorMenu(pixels); // Don't need to update this part of menu.
  copyPixels(pixels, undoPixels);
 
  size_t mouseX = 0;
@@ -257,10 +74,11 @@ int main(int argc, char *argv[]) {
    if (SDL_WaitEvent(&event)) {
 
      // Possible optimization?
-     menu.printCurrentColor(pixels, currentColor);
-     menu.resetCurrentBrushBackground(pixels);
-     menu.printCurrentBrush(pixels,brushSize,currentColor);
+     printCurrentColor(pixels, currentColor);
+     resetCurrentBrushBackground(pixels);
+     printCurrentBrush(pixels,brushSize,currentColor);
      SDL_UpdateTexture(texture, NULL, pixels, SCREEN_WIDTH * sizeof(Uint32));
+     stopRender = false;
 
      switch (event.type) {
        case SDL_QUIT:
@@ -269,12 +87,20 @@ int main(int argc, char *argv[]) {
        case SDL_MOUSEMOTION:
          mouseX = event.motion.x;
          mouseY = event.motion.y;
+         stopRender = true;
          if (leftMouseButton) {
+           stopRender = false;
            paintPixel(pixels, mouseX, mouseY, brushSize, currentColor);
          }
          if (drawLineFirstPoint && (!drawLineEndPoint)) {
+           stopRender = false;
              copyPixels(undoPixels, pixels);
-              paintLine(pixels, tmpMouseX, tmpMouseY, mouseX, mouseY, brushSize, currentColor);
+             paintLine(pixels, tmpMouseX, tmpMouseY, mouseX, mouseY, brushSize, currentColor);
+         }
+         if (drawCircleFirstPoint && (!drawCircleEndPoint)) {
+           stopRender = false;
+           copyPixels(undoPixels, pixels);
+           paintCircle(pixels, tmpMouseX, tmpMouseY, mouseX, mouseY, brushSize, currentColor);
          }
          break;
        case SDL_MOUSEBUTTONDOWN:
@@ -292,6 +118,19 @@ int main(int argc, char *argv[]) {
                  drawLineEndPoint = true;
                  break;
              }
+             if (cKeyPressed) {
+   						tmpMouseX = mouseX;
+   						tmpMouseY = mouseY;
+   						drawCircleFirstPoint = true;
+   						cKeyPressed = false;
+   						copyPixels(pixels, undoPixels);
+   						break;
+   					}
+   					if (drawCircleFirstPoint) {
+   						drawCircleFirstPoint = false;
+   						drawCircleEndPoint = true;
+   						break;
+   					}
              leftMouseButton = true;
              copyPixels(pixels,undoPixels);
              paintPixel(pixels, mouseX, mouseY, brushSize, currentColor);
@@ -333,47 +172,47 @@ int main(int argc, char *argv[]) {
          case SDLK_1:
             saveManager(pixels, saveState, "saves/save1.pix", "samples/sample1.pix");
             saveState = 3;
-            menu.printColorMenu(pixels);
+            printColorMenu(pixels);
             break;
          case SDLK_2:
             saveManager(pixels, saveState, "saves/save2.pix", "samples/sample2.pix");
             saveState = 3;
-            menu.printColorMenu(pixels);
+            printColorMenu(pixels);
             break;
          case SDLK_3:
             saveManager(pixels, saveState, "saves/save3.pix", "samples/sample3.pix");
             saveState = 3;
-            menu.printColorMenu(pixels);
+            printColorMenu(pixels);
             break;
         case SDLK_4:
             saveManager(pixels, saveState, "saves/save4.pix", "samples/sample4.pix");
             saveState = 3;
-            menu.printColorMenu(pixels);
+            printColorMenu(pixels);
             break;
         case SDLK_5:
             saveManager(pixels, saveState, "saves/save5.pix", "samples/sample5.pix");
             saveState = 3;
-            menu.printColorMenu(pixels);
+            printColorMenu(pixels);
             break;
         case SDLK_6:
             saveManager(pixels, saveState, "saves/save6.pix", "samples/sample6.pix");
             saveState = 3;
-            menu.printColorMenu(pixels);
+            printColorMenu(pixels);
             break;
         case SDLK_7:
             saveManager(pixels, saveState, "saves/save7.pix", "samples/sample7.pix");
             saveState = 3;
-            menu.printColorMenu(pixels);
+            printColorMenu(pixels);
             break;
         case SDLK_8:
             saveManager(pixels, saveState, "saves/save8.pix", "samples/sample8.pix");
             saveState = 3;
-            menu.printColorMenu(pixels);
+            printColorMenu(pixels);
             break;
         case SDLK_9:
             saveManager(pixels, saveState, "saves/save9.pix", "samples/sample9.pix");
             saveState = 3;
-            menu.printColorMenu(pixels);
+            printColorMenu(pixels);
             break;
          case SDLK_u:
             swapPixels(pixels, undoPixels);
@@ -387,6 +226,24 @@ int main(int argc, char *argv[]) {
          case SDLK_p:
             currentColor = colorPicker(pixels, mouseX, mouseY);
             break;
+         case SDLK_c:
+           if (drawCircleFirstPoint == true && drawCircleEndPoint == false) {
+             drawCircleFirstPoint = false;
+             swapPixels(pixels, undoPixels);
+             break;
+           }
+           if (drawLineEndPoint) {
+             drawCircleEndPoint = false;
+           }
+           if (!cKeyPressed) {
+             cKeyPressed = true;
+             break;
+           }
+           if (cKeyPressed) {
+             cKeyPressed = false;
+             break;
+           }
+           break;
          case SDLK_d:
             if (drawLineFirstPoint == true && drawLineEndPoint == false) {
               drawLineFirstPoint = false;
@@ -425,14 +282,16 @@ int main(int argc, char *argv[]) {
          case SDLK_RSHIFT: // Reset the canvas.
            copyPixels(pixels, undoPixels);
            setCanvasBackground(pixels, 255);
-           menu.printColorMenu(pixels);
+           printColorMenu(pixels);
            break;
        }
        break;
      }
-     SDL_RenderClear(renderer);
-     SDL_RenderCopy(renderer, texture, NULL, NULL);
-     SDL_RenderPresent(renderer);
+     if (!stopRender) {
+       SDL_RenderClear(renderer);
+       SDL_RenderCopy(renderer, texture, NULL, NULL);
+       SDL_RenderPresent(renderer);
+     }
     }
   }
 

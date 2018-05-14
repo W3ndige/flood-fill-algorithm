@@ -1,4 +1,4 @@
-OBJS = src/main.cpp
+OBJS = src/main.cpp src/menu.cpp src/drawing.cpp src/gadgets.cpp src/files.cpp
 CC = g++
 COMPILER_FLAGS = -Wall -Wextra
 LINKER_FLAGS = -lSDL2
