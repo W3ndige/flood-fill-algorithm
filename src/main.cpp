@@ -1,15 +1,9 @@
-#include <queue>
-#include <math.h>
 #include <stdio.h>
-#include <string.h>
-#include <SDL2/SDL.h>
 #include "menu.h"
 #include "drawing.h"
 #include "gadgets.h"
 #include "files.h"
 
-// TODO(W3ndige): Convert to 2D array.
-// TODO(W3ndige): PPM or image converters.
 // TODO(W3ndige): Modify straght line drawing in order to allow chaining lines.
 
 const size_t SCREEN_WIDTH  = 720;
@@ -44,6 +38,7 @@ int main(int argc, char *argv[]) {
  printControls();
  Uint32 *pixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT]; // Assign new set of pixels.
  Uint32 *undoPixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT]; // Assign a set of pixels used in undo/redo algorithm.
+ Uint32 *copyPastePixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT];
  SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
  setCanvasBackground(pixels, 255);
 
@@ -55,7 +50,10 @@ int main(int argc, char *argv[]) {
  bool drawLineEndPoint = false;
  bool drawCircleFirstPoint = false;
  bool drawCircleEndPoint = false;
- bool cKeyPressed = false;
+ bool okeyPressed = false;
+ bool ckeyPressed = false;
+ bool copyFirstPoint = false;
+ bool copyEndPoint = false;
  bool stopRender = false;
  int saveState = 3;
  Uint32 currentColor = 0;
@@ -69,6 +67,7 @@ int main(int argc, char *argv[]) {
  size_t mouseY = 0;
  size_t tmpMouseX = 0;
  size_t tmpMouseY = 0;
+ size_t copyMouseCoordinates[4];
 
  while (!end) {
    if (SDL_WaitEvent(&event)) {
@@ -94,43 +93,65 @@ int main(int argc, char *argv[]) {
          }
          if (drawLineFirstPoint && (!drawLineEndPoint)) {
            stopRender = false;
-             copyPixels(undoPixels, pixels);
-             paintLine(pixels, tmpMouseX, tmpMouseY, mouseX, mouseY, brushSize, currentColor);
+           copyPixels(undoPixels, pixels);
+           paintLine(pixels, tmpMouseX, tmpMouseY, mouseX, mouseY, brushSize, currentColor);
          }
          if (drawCircleFirstPoint && (!drawCircleEndPoint)) {
            stopRender = false;
            copyPixels(undoPixels, pixels);
            paintCircle(pixels, tmpMouseX, tmpMouseY, mouseX, mouseY, brushSize, currentColor);
          }
+         if (copyFirstPoint && (!copyEndPoint)) {
+           stopRender = false;
+           copyPixels(undoPixels, pixels);
+           copyMouseCoordinates[0] = tmpMouseX;
+           copyMouseCoordinates[1] = tmpMouseY;
+           copyMouseCoordinates[2] = mouseX;
+           copyMouseCoordinates[3] = mouseY;
+           cutPixels(pixels, copyPastePixels, tmpMouseX, tmpMouseY, mouseX, mouseY);
+         }
          break;
        case SDL_MOUSEBUTTONDOWN:
          switch (event.button.button) {
              case SDL_BUTTON_LEFT:
-             if (dKeyPressed) {
-                 tmpMouseX = mouseX;
-                 tmpMouseY = mouseY;
-                 drawLineFirstPoint = true;
-                 dKeyPressed = false;
-                 break;
+              if (dKeyPressed) {
+                   tmpMouseX = mouseX;
+                   tmpMouseY = mouseY;
+                   drawLineFirstPoint = true;
+                   dKeyPressed = false;
+                   break;
+               }
+              if (drawLineFirstPoint) {
+                   drawLineFirstPoint = false;
+                   drawLineEndPoint = true;
+                   break;
+               }
+              if (okeyPressed) {
+     						tmpMouseX = mouseX;
+     						tmpMouseY = mouseY;
+     						drawCircleFirstPoint = true;
+     						okeyPressed = false;
+     						copyPixels(pixels, undoPixels);
+     						break;
+     					}
+              if (drawCircleFirstPoint) {
+                drawCircleFirstPoint = false;
+                drawCircleEndPoint = true;
+                break;
+              }
+     					if (copyFirstPoint) {
+     						copyFirstPoint = false;
+     						copyEndPoint = true;
+     						break;
+     					}
+             if (ckeyPressed) {
+               tmpMouseX = mouseX;
+               tmpMouseY = mouseY;
+               copyFirstPoint = true;
+               ckeyPressed = false;
+               copyPixels(pixels, undoPixels);
+               break;
              }
-             if (drawLineFirstPoint) {
-                 drawLineFirstPoint = false;
-                 drawLineEndPoint = true;
-                 break;
-             }
-             if (cKeyPressed) {
-   						tmpMouseX = mouseX;
-   						tmpMouseY = mouseY;
-   						drawCircleFirstPoint = true;
-   						cKeyPressed = false;
-   						copyPixels(pixels, undoPixels);
-   						break;
-   					}
-   					if (drawCircleFirstPoint) {
-   						drawCircleFirstPoint = false;
-   						drawCircleEndPoint = true;
-   						break;
-   					}
              leftMouseButton = true;
              copyPixels(pixels,undoPixels);
              paintPixel(pixels, mouseX, mouseY, brushSize, currentColor);
@@ -223,24 +244,45 @@ int main(int argc, char *argv[]) {
          case SDLK_l:
             saveState = 2;
             break;
-         case SDLK_p:
+         case SDLK_k:
             currentColor = colorPicker(pixels, mouseX, mouseY);
             break;
          case SDLK_c:
+            if (copyFirstPoint == true && copyEndPoint == false) {
+              copyFirstPoint = false;
+              swapPixels(pixels, undoPixels);
+              break;
+            }
+            if (copyEndPoint) {
+              copyEndPoint = false;
+            }
+            if (!ckeyPressed) {
+              ckeyPressed = true;
+              break;
+            }
+            if (ckeyPressed) {
+              ckeyPressed = false;
+              break;
+            }
+            break;
+         case SDLK_p:
+            pastePixels(pixels, copyPastePixels, copyMouseCoordinates, mouseX, mouseY);
+            break;
+         case SDLK_o:
            if (drawCircleFirstPoint == true && drawCircleEndPoint == false) {
              drawCircleFirstPoint = false;
              swapPixels(pixels, undoPixels);
              break;
            }
-           if (drawLineEndPoint) {
+           if (drawCircleEndPoint) {
              drawCircleEndPoint = false;
            }
-           if (!cKeyPressed) {
-             cKeyPressed = true;
+           if (!okeyPressed) {
+             okeyPressed = true;
              break;
            }
-           if (cKeyPressed) {
-             cKeyPressed = false;
+           if (okeyPressed) {
+             okeyPressed = false;
              break;
            }
            break;
@@ -298,8 +340,10 @@ int main(int argc, char *argv[]) {
   // Essential cleanup
   setCanvasBackground(pixels, 255); // Overwrite images from memory before making it free.
   setCanvasBackground(undoPixels, 255);
+  setCanvasBackground(copyPastePixels, 255);
   delete[] pixels;
   delete[] undoPixels;
+  delete[] copyPastePixels;
   SDL_DestroyTexture(texture);
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
