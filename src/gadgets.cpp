@@ -21,7 +21,8 @@ void swapPixels(Uint32 *pixels, Uint32 *undoPixels) {
   delete[] tmpPixels;
 }
 
-void cutPixels(Uint32 *pixels, Uint32 *copyPastePixels, size_t startMouseX, size_t startMouseY, size_t endMouseX, size_t endMouseY) {
+void cutPixels(Uint32 *pixels, Uint32 *copyPastePixels, size_t startMouseX,
+               size_t startMouseY, size_t endMouseX, size_t endMouseY) {
 
   size_t tmp;
   if (startMouseX > endMouseX) {
@@ -38,7 +39,9 @@ void cutPixels(Uint32 *pixels, Uint32 *copyPastePixels, size_t startMouseX, size
 
   for (size_t i = startMouseY; i < endMouseY; i++) {
     for (size_t j = startMouseX; j < endMouseX; j++) {
-      if ((j + i * SCREEN_WIDTH) <= SCREEN_HEIGHT * SCREEN_WIDTH && (j + i * SCREEN_WIDTH) < ((i + 1) * SCREEN_WIDTH) && (j + i * SCREEN_WIDTH) >= (SCREEN_WIDTH * MENU_HEIGHT)) {
+      if ((j + i * SCREEN_WIDTH) <= SCREEN_HEIGHT * SCREEN_WIDTH &&
+          (j + i * SCREEN_WIDTH) < ((i + 1) * SCREEN_WIDTH) &&
+          (j + i * SCREEN_WIDTH) >= (SCREEN_WIDTH * MENU_HEIGHT)) {
         copyPastePixels[j + i * SCREEN_WIDTH] = pixels[j + i * SCREEN_WIDTH];
         pixels[j + i * SCREEN_WIDTH] = 0xFFFFFFF;
       }
@@ -46,7 +49,8 @@ void cutPixels(Uint32 *pixels, Uint32 *copyPastePixels, size_t startMouseX, size
   }
 }
 
-void pastePixels(Uint32 *pixels, Uint32 *copyPastePixels, size_t *copyMouseCoordinates, size_t mouseX, size_t mouseY) {
+void pastePixels(Uint32 *pixels, Uint32 *copyPastePixels,
+                 size_t *copyMouseCoordinates) {
   for (size_t i = copyMouseCoordinates[1]; i <  copyMouseCoordinates[3]; i++) {
     for (size_t j = copyMouseCoordinates[0]; j < copyMouseCoordinates[2]; j++) {
       pixels[j + i * SCREEN_WIDTH] = copyPastePixels[j + i * SCREEN_WIDTH];

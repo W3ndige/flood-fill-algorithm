@@ -1,0 +1,171 @@
+\hypertarget{drawing_8h}{}\section{src/drawing.h File Reference}
+\label{drawing_8h}\index{src/drawing.\+h@{src/drawing.\+h}}
+
+
+File contains functions used during drawing interactions with canvas.  
+
+
+{\ttfamily \#include $<$queue$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L.\+h$>$}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{drawing_8h_a3472db7f0b2cc60b633c49f4093ac854}{queue\+Flood\+Fill4}} (Uint32 $\ast$pixels, size\+\_\+t mouseX, size\+\_\+t mouseY, Uint32 old\+Color, Uint32 new\+Color)
+\begin{DoxyCompactList}\small\item\em Function used to fill an area with specified color. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{drawing_8h_aaeb800797fd7c8f5a12cd1437ed3aac4}{paint\+Pixel}} (Uint32 $\ast$pixels, size\+\_\+t mouseX, size\+\_\+t mouseY, int brush\+Size, Uint32 current\+Color)
+\begin{DoxyCompactList}\small\item\em Function used to imitate the brush tool. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{drawing_8h_a957b466a216a15472f97d87dcb140a6d}{paint\+Line}} (Uint32 $\ast$pixels, size\+\_\+t start\+MouseX, size\+\_\+t start\+MouseY, size\+\_\+t end\+MouseX, size\+\_\+t end\+MouseY, int brush\+Size, Uint32 current\+Color)
+\begin{DoxyCompactList}\small\item\em Function used to paint the line between two points. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{drawing_8h_a64a901f16db4a054c7aaf1261a7289d8}{paint\+Circle}} (Uint32 $\ast$pixels, size\+\_\+t start\+MouseX, size\+\_\+t start\+MouseY, size\+\_\+t end\+MouseX, size\+\_\+t end\+MouseY, int brush\+Size, Uint32 current\+Color)
+\begin{DoxyCompactList}\small\item\em Function used to paint the circle between two points. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const size\+\_\+t \mbox{\hyperlink{drawing_8h_a813bf6f2c749d348ea863e8270a31a1a}{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{drawing_8h_a18e4575cb7720a49f17bf3cbd047211d}{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{drawing_8h_aa23558ef3d4b5835d91b273fdfd4f4e8}{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{drawing_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+File contains functions used during drawing interactions with canvas. 
+
+\begin{DoxyDate}{Date}
+8 June 2018 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{drawing_8h_a64a901f16db4a054c7aaf1261a7289d8}\label{drawing_8h_a64a901f16db4a054c7aaf1261a7289d8}} 
+\index{drawing.\+h@{drawing.\+h}!paint\+Circle@{paint\+Circle}}
+\index{paint\+Circle@{paint\+Circle}!drawing.\+h@{drawing.\+h}}
+\subsubsection{\texorpdfstring{paint\+Circle()}{paintCircle()}}
+{\footnotesize\ttfamily void paint\+Circle (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{size\+\_\+t}]{start\+MouseX,  }\item[{size\+\_\+t}]{start\+MouseY,  }\item[{size\+\_\+t}]{end\+MouseX,  }\item[{size\+\_\+t}]{end\+MouseY,  }\item[{int}]{brush\+Size,  }\item[{Uint32}]{current\+Color }\end{DoxyParamCaption})}
+
+
+
+Function used to paint the circle between two points. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+ & {\em size\+\_\+t} & start\+MouseX Value of X axis of the mouse in first point. \\
+\hline
+ & {\em size\+\_\+t} & start\+MouseY Value of Y axis of the mouse in first point. \\
+\hline
+ & {\em size\+\_\+t} & end\+MouseX Value of X axis of the mouse in second point. \\
+\hline
+ & {\em size\+\_\+t} & end\+MouseY Value of Y axis of the mouse in second point . \\
+\hline
+ & {\em int} & brush\+Size Size of the brush. \\
+\hline
+ & {\em Uint32} & current\+Color Value of the color that is going to be used while painting. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{drawing_8h_a957b466a216a15472f97d87dcb140a6d}\label{drawing_8h_a957b466a216a15472f97d87dcb140a6d}} 
+\index{drawing.\+h@{drawing.\+h}!paint\+Line@{paint\+Line}}
+\index{paint\+Line@{paint\+Line}!drawing.\+h@{drawing.\+h}}
+\subsubsection{\texorpdfstring{paint\+Line()}{paintLine()}}
+{\footnotesize\ttfamily void paint\+Line (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{size\+\_\+t}]{start\+MouseX,  }\item[{size\+\_\+t}]{start\+MouseY,  }\item[{size\+\_\+t}]{end\+MouseX,  }\item[{size\+\_\+t}]{end\+MouseY,  }\item[{int}]{brush\+Size,  }\item[{Uint32}]{current\+Color }\end{DoxyParamCaption})}
+
+
+
+Function used to paint the line between two points. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+ & {\em size\+\_\+t} & start\+MouseX Value of X axis of the mouse in first point. \\
+\hline
+ & {\em size\+\_\+t} & start\+MouseY Value of Y axis of the mouse in first point. \\
+\hline
+ & {\em size\+\_\+t} & end\+MouseX Value of X axis of the mouse in second point. \\
+\hline
+ & {\em size\+\_\+t} & end\+MouseY Value of Y axis of the mouse in second point. \\
+\hline
+ & {\em int} & brush\+Size Size of the brush. \\
+\hline
+ & {\em Uint32} & current\+Color Value of the color that is going to be used while painting. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{drawing_8h_aaeb800797fd7c8f5a12cd1437ed3aac4}\label{drawing_8h_aaeb800797fd7c8f5a12cd1437ed3aac4}} 
+\index{drawing.\+h@{drawing.\+h}!paint\+Pixel@{paint\+Pixel}}
+\index{paint\+Pixel@{paint\+Pixel}!drawing.\+h@{drawing.\+h}}
+\subsubsection{\texorpdfstring{paint\+Pixel()}{paintPixel()}}
+{\footnotesize\ttfamily void paint\+Pixel (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{size\+\_\+t}]{mouseX,  }\item[{size\+\_\+t}]{mouseY,  }\item[{int}]{brush\+Size,  }\item[{Uint32}]{current\+Color }\end{DoxyParamCaption})}
+
+
+
+Function used to imitate the brush tool. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+ & {\em size\+\_\+t} & mouseX Value of X axis of the mouse. \\
+\hline
+ & {\em size\+\_\+t} & mouseY Value of Y axis of the mouse. \\
+\hline
+ & {\em int} & brush\+Size Size of the brush. \\
+\hline
+ & {\em Uint32} & current\+Color Value of the color that is going to be used while painting. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{drawing_8h_a3472db7f0b2cc60b633c49f4093ac854}\label{drawing_8h_a3472db7f0b2cc60b633c49f4093ac854}} 
+\index{drawing.\+h@{drawing.\+h}!queue\+Flood\+Fill4@{queue\+Flood\+Fill4}}
+\index{queue\+Flood\+Fill4@{queue\+Flood\+Fill4}!drawing.\+h@{drawing.\+h}}
+\subsubsection{\texorpdfstring{queue\+Flood\+Fill4()}{queueFloodFill4()}}
+{\footnotesize\ttfamily void queue\+Flood\+Fill4 (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{size\+\_\+t}]{mouseX,  }\item[{size\+\_\+t}]{mouseY,  }\item[{Uint32}]{old\+Color,  }\item[{Uint32}]{new\+Color }\end{DoxyParamCaption})}
+
+
+
+Function used to fill an area with specified color. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+ & {\em size\+\_\+t} & mouseX Value of X axis of the mouse. \\
+\hline
+ & {\em size\+\_\+t} & mouseY Value of Y axis of the mouse. \\
+\hline
+ & {\em Uint32} & old\+Color Value of the color that is currently in the canvas at specified point. \\
+\hline
+ & {\em Uint32} & new\+Color Value of the color that is going to be used while filling. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{drawing_8h_aa23558ef3d4b5835d91b273fdfd4f4e8}\label{drawing_8h_aa23558ef3d4b5835d91b273fdfd4f4e8}} 
+\index{drawing.\+h@{drawing.\+h}!M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT@{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}}
+\index{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT@{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}!drawing.\+h@{drawing.\+h}}
+\subsubsection{\texorpdfstring{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}{MENU\_HEIGHT}}
+{\footnotesize\ttfamily const size\+\_\+t M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}
+
+Height of the menu \mbox{\Hypertarget{drawing_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}\label{drawing_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}} 
+\index{drawing.\+h@{drawing.\+h}!N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS@{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}}
+\index{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS@{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}!drawing.\+h@{drawing.\+h}}
+\subsubsection{\texorpdfstring{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}{NUMBER\_OF\_COLORS}}
+{\footnotesize\ttfamily const size\+\_\+t N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}
+
+Number of colors available to use \mbox{\Hypertarget{drawing_8h_a18e4575cb7720a49f17bf3cbd047211d}\label{drawing_8h_a18e4575cb7720a49f17bf3cbd047211d}} 
+\index{drawing.\+h@{drawing.\+h}!S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT@{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}}
+\index{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT@{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}!drawing.\+h@{drawing.\+h}}
+\subsubsection{\texorpdfstring{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}{SCREEN\_HEIGHT}}
+{\footnotesize\ttfamily const size\+\_\+t S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}
+
+Height of the screen \mbox{\Hypertarget{drawing_8h_a813bf6f2c749d348ea863e8270a31a1a}\label{drawing_8h_a813bf6f2c749d348ea863e8270a31a1a}} 
+\index{drawing.\+h@{drawing.\+h}!S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH@{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}}
+\index{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH@{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}!drawing.\+h@{drawing.\+h}}
+\subsubsection{\texorpdfstring{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}{SCREEN\_WIDTH}}
+{\footnotesize\ttfamily const size\+\_\+t S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}
+
+Width of the screen 

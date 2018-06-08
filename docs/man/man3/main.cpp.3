@@ -1,0 +1,81 @@
+.TH "src/main.cpp" 3 "Fri Jun 8 2018" "Flood Fill Algorithm" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/main.cpp \- Main file containing all the logic\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include 'menu\&.h'\fP
+.br
+\fC#include 'drawing\&.h'\fP
+.br
+\fC#include 'gadgets\&.h'\fP
+.br
+\fC#include 'files\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBmain\fP (int argc, char *argv[])"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "const size_t \fBSCREEN_WIDTH\fP = 720"
+.br
+.ti -1c
+.RI "const size_t \fBSCREEN_HEIGHT\fP = 480"
+.br
+.ti -1c
+.RI "const size_t \fBMENU_HEIGHT\fP = 30"
+.br
+.ti -1c
+.RI "const size_t \fBNUMBER_OF_COLORS\fP = 20"
+.br
+.ti -1c
+.RI "const Uint32 \fBCOLORS\fP [\fBNUMBER_OF_COLORS\fP]"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Main file containing all the logic\&. 
+
+
+.PP
+\fBDate:\fP
+.RS 4
+8 June 2018 
+.RE
+.PP
+
+.SH "Variable Documentation"
+.PP 
+.SS "const Uint32 COLORS[\fBNUMBER_OF_COLORS\fP]"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+    0xFF000000, 0xC0C0C0, 0x808080, 0xFFFFFF, 0x800000, 0xFF0000, 0xFFA500,
+    0x800080,   0xC969FF, 0xFF69B4, 0x008000, 0x08E100, 0x93FF2D, 0xC3C355,
+    0xFFFF00,   0xFFFF83, 0x000080, 0x0000FF, 0x008080, 0x00FFFF}
+.fi
+Array of possible colors 
+.SS "const size_t MENU_HEIGHT = 30"
+Height of the menu 
+.SS "const size_t NUMBER_OF_COLORS = 20"
+Number of colors available to use 
+.SS "const size_t SCREEN_HEIGHT = 480"
+Height of the screen 
+.SS "const size_t SCREEN_WIDTH = 720"
+Width of the screen 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Flood Fill Algorithm from the source code\&.

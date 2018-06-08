@@ -1,0 +1,143 @@
+\hypertarget{menu_8h}{}\section{src/menu.h File Reference}
+\label{menu_8h}\index{src/menu.\+h@{src/menu.\+h}}
+
+
+File contains functions used while drawing the upper menu.  
+
+
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L.\+h$>$}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{menu_8h_a4de886a447a31008ec1402092feef086}{print\+Current\+Color}} (Uint32 $\ast$pixels, Uint32 current\+Color)
+\begin{DoxyCompactList}\small\item\em Function used to fill an area with specified color. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{menu_8h_a7e60d491dc0d7b86ffd814d43bdf4622}{print\+Color\+Menu}} (Uint32 $\ast$pixels)
+\begin{DoxyCompactList}\small\item\em Print all the possible colors. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{menu_8h_aedf14e92e88dcde7c419bc0d10e32578}{print\+Current\+Brush}} (Uint32 $\ast$pixels, int brush\+Size, Uint32 current\+Color)
+\begin{DoxyCompactList}\small\item\em Print all the possible colors. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{menu_8h_a779d928896a267548f365a49ff1b80f7}{reset\+Current\+Brush\+Background}} (Uint32 $\ast$pixels)
+\begin{DoxyCompactList}\small\item\em Reset the field that is used to print the size of the current brush. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const size\+\_\+t \mbox{\hyperlink{menu_8h_a813bf6f2c749d348ea863e8270a31a1a}{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{menu_8h_a18e4575cb7720a49f17bf3cbd047211d}{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{menu_8h_aa23558ef3d4b5835d91b273fdfd4f4e8}{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{menu_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}}
+\item 
+const Uint32 \mbox{\hyperlink{menu_8h_a7ba6fea7509543fa9016166ee7536069}{C\+O\+L\+O\+RS}} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+File contains functions used while drawing the upper menu. 
+
+\begin{DoxyDate}{Date}
+8 June 2018 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{menu_8h_a7e60d491dc0d7b86ffd814d43bdf4622}\label{menu_8h_a7e60d491dc0d7b86ffd814d43bdf4622}} 
+\index{menu.\+h@{menu.\+h}!print\+Color\+Menu@{print\+Color\+Menu}}
+\index{print\+Color\+Menu@{print\+Color\+Menu}!menu.\+h@{menu.\+h}}
+\subsubsection{\texorpdfstring{print\+Color\+Menu()}{printColorMenu()}}
+{\footnotesize\ttfamily void print\+Color\+Menu (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels }\end{DoxyParamCaption})}
+
+
+
+Print all the possible colors. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{menu_8h_aedf14e92e88dcde7c419bc0d10e32578}\label{menu_8h_aedf14e92e88dcde7c419bc0d10e32578}} 
+\index{menu.\+h@{menu.\+h}!print\+Current\+Brush@{print\+Current\+Brush}}
+\index{print\+Current\+Brush@{print\+Current\+Brush}!menu.\+h@{menu.\+h}}
+\subsubsection{\texorpdfstring{print\+Current\+Brush()}{printCurrentBrush()}}
+{\footnotesize\ttfamily void print\+Current\+Brush (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{int}]{brush\+Size,  }\item[{Uint32}]{current\+Color }\end{DoxyParamCaption})}
+
+
+
+Print all the possible colors. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+ & {\em int} & brush\+Size Current size of the brush \\
+\hline
+ & {\em Uint32} & current\+Color Value of the current color. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{menu_8h_a4de886a447a31008ec1402092feef086}\label{menu_8h_a4de886a447a31008ec1402092feef086}} 
+\index{menu.\+h@{menu.\+h}!print\+Current\+Color@{print\+Current\+Color}}
+\index{print\+Current\+Color@{print\+Current\+Color}!menu.\+h@{menu.\+h}}
+\subsubsection{\texorpdfstring{print\+Current\+Color()}{printCurrentColor()}}
+{\footnotesize\ttfamily void print\+Current\+Color (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{Uint32}]{current\+Color }\end{DoxyParamCaption})}
+
+
+
+Function used to fill an area with specified color. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+ & {\em Uint32} & current\+Color Value of the current color. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{menu_8h_a779d928896a267548f365a49ff1b80f7}\label{menu_8h_a779d928896a267548f365a49ff1b80f7}} 
+\index{menu.\+h@{menu.\+h}!reset\+Current\+Brush\+Background@{reset\+Current\+Brush\+Background}}
+\index{reset\+Current\+Brush\+Background@{reset\+Current\+Brush\+Background}!menu.\+h@{menu.\+h}}
+\subsubsection{\texorpdfstring{reset\+Current\+Brush\+Background()}{resetCurrentBrushBackground()}}
+{\footnotesize\ttfamily void reset\+Current\+Brush\+Background (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels }\end{DoxyParamCaption})}
+
+
+
+Reset the field that is used to print the size of the current brush. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{menu_8h_a7ba6fea7509543fa9016166ee7536069}\label{menu_8h_a7ba6fea7509543fa9016166ee7536069}} 
+\index{menu.\+h@{menu.\+h}!C\+O\+L\+O\+RS@{C\+O\+L\+O\+RS}}
+\index{C\+O\+L\+O\+RS@{C\+O\+L\+O\+RS}!menu.\+h@{menu.\+h}}
+\subsubsection{\texorpdfstring{C\+O\+L\+O\+RS}{COLORS}}
+{\footnotesize\ttfamily const Uint32 C\+O\+L\+O\+RS\mbox{[}$\,$\mbox{]}}
+
+Array of possible colors \mbox{\Hypertarget{menu_8h_aa23558ef3d4b5835d91b273fdfd4f4e8}\label{menu_8h_aa23558ef3d4b5835d91b273fdfd4f4e8}} 
+\index{menu.\+h@{menu.\+h}!M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT@{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}}
+\index{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT@{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}!menu.\+h@{menu.\+h}}
+\subsubsection{\texorpdfstring{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}{MENU\_HEIGHT}}
+{\footnotesize\ttfamily const size\+\_\+t M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}
+
+Height of the menu \mbox{\Hypertarget{menu_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}\label{menu_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}} 
+\index{menu.\+h@{menu.\+h}!N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS@{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}}
+\index{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS@{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}!menu.\+h@{menu.\+h}}
+\subsubsection{\texorpdfstring{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}{NUMBER\_OF\_COLORS}}
+{\footnotesize\ttfamily const size\+\_\+t N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}
+
+Number of colors available to use \mbox{\Hypertarget{menu_8h_a18e4575cb7720a49f17bf3cbd047211d}\label{menu_8h_a18e4575cb7720a49f17bf3cbd047211d}} 
+\index{menu.\+h@{menu.\+h}!S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT@{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}}
+\index{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT@{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}!menu.\+h@{menu.\+h}}
+\subsubsection{\texorpdfstring{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}{SCREEN\_HEIGHT}}
+{\footnotesize\ttfamily const size\+\_\+t S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}
+
+Height of the screen \mbox{\Hypertarget{menu_8h_a813bf6f2c749d348ea863e8270a31a1a}\label{menu_8h_a813bf6f2c749d348ea863e8270a31a1a}} 
+\index{menu.\+h@{menu.\+h}!S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH@{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}}
+\index{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH@{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}!menu.\+h@{menu.\+h}}
+\subsubsection{\texorpdfstring{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}{SCREEN\_WIDTH}}
+{\footnotesize\ttfamily const size\+\_\+t S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}
+
+Width of the screen 

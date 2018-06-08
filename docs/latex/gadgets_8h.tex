@@ -1,0 +1,197 @@
+\hypertarget{gadgets_8h}{}\section{src/gadgets.h File Reference}
+\label{gadgets_8h}\index{src/gadgets.\+h@{src/gadgets.\+h}}
+
+
+File contains functions used as different tools.  
+
+
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L.\+h$>$}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Uint32 \mbox{\hyperlink{gadgets_8h_abcb85a2edf6a750a877e16477a5b78a6}{color\+Picker}} (Uint32 $\ast$pixels, size\+\_\+t mouseX, size\+\_\+t mouseY)
+\begin{DoxyCompactList}\small\item\em Function used pick a color from a specified point. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{gadgets_8h_a6b3429e43376f42dbc670a9116c091e2}{set\+Canvas\+Background}} (Uint32 $\ast$pixels, Uint32 color)
+\begin{DoxyCompactList}\small\item\em Function used to set the color of the canvas. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{gadgets_8h_a26c35db880221c28994562b3bb785125}{copy\+Pixels}} (Uint32 $\ast$pixels, Uint32 $\ast$undo\+Pixels)
+\begin{DoxyCompactList}\small\item\em Function used to copy the canvas to the undo pixels. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{gadgets_8h_ad37aed97b8ace80ac155699c69b49bca}{swap\+Pixels}} (Uint32 $\ast$pixels, Uint32 $\ast$undo\+Pixels)
+\begin{DoxyCompactList}\small\item\em Exchange the values between pixels and undo\+Pixels. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{gadgets_8h_a79574df9fde64f5f7a955468ce31a8b2}{cut\+Pixels}} (Uint32 $\ast$pixels, Uint32 $\ast$copy\+Paste\+Pixels, size\+\_\+t start\+MouseX, size\+\_\+t start\+MouseY, size\+\_\+t end\+MouseX, size\+\_\+t end\+MouseY)
+\begin{DoxyCompactList}\small\item\em Copy smaller area of the canvas. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{gadgets_8h_ac72e786b4d072a118491e99fa0ddee3b}{paste\+Pixels}} (Uint32 $\ast$pixels, Uint32 $\ast$copy\+Paste\+Pixels, size\+\_\+t $\ast$copy\+Mouse\+Coordinates)
+\begin{DoxyCompactList}\small\item\em Paste the smaller area of pixels to the canvas. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const size\+\_\+t \mbox{\hyperlink{gadgets_8h_a813bf6f2c749d348ea863e8270a31a1a}{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{gadgets_8h_a18e4575cb7720a49f17bf3cbd047211d}{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{gadgets_8h_aa23558ef3d4b5835d91b273fdfd4f4e8}{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{gadgets_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}}
+\item 
+const Uint32 \mbox{\hyperlink{gadgets_8h_a7ba6fea7509543fa9016166ee7536069}{C\+O\+L\+O\+RS}} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+File contains functions used as different tools. 
+
+\begin{DoxyDate}{Date}
+8 June 2018 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{gadgets_8h_abcb85a2edf6a750a877e16477a5b78a6}\label{gadgets_8h_abcb85a2edf6a750a877e16477a5b78a6}} 
+\index{gadgets.\+h@{gadgets.\+h}!color\+Picker@{color\+Picker}}
+\index{color\+Picker@{color\+Picker}!gadgets.\+h@{gadgets.\+h}}
+\subsubsection{\texorpdfstring{color\+Picker()}{colorPicker()}}
+{\footnotesize\ttfamily Uint32 color\+Picker (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{size\+\_\+t}]{mouseX,  }\item[{size\+\_\+t}]{mouseY }\end{DoxyParamCaption})}
+
+
+
+Function used pick a color from a specified point. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+ & {\em size\+\_\+t} & mouseX Value of X axis of the mouse. \\
+\hline
+ & {\em size\+\_\+t} & mouseY Value of Y axis of the mouse. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Return a color that was at certain position. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{gadgets_8h_a26c35db880221c28994562b3bb785125}\label{gadgets_8h_a26c35db880221c28994562b3bb785125}} 
+\index{gadgets.\+h@{gadgets.\+h}!copy\+Pixels@{copy\+Pixels}}
+\index{copy\+Pixels@{copy\+Pixels}!gadgets.\+h@{gadgets.\+h}}
+\subsubsection{\texorpdfstring{copy\+Pixels()}{copyPixels()}}
+{\footnotesize\ttfamily void copy\+Pixels (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{Uint32 $\ast$}]{undo\+Pixels }\end{DoxyParamCaption})}
+
+
+
+Function used to copy the canvas to the undo pixels. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+\mbox{\tt out}  & {\em Uint32} & $\ast$undo\+Pixels Pointer to pixels used as the backup. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{gadgets_8h_a79574df9fde64f5f7a955468ce31a8b2}\label{gadgets_8h_a79574df9fde64f5f7a955468ce31a8b2}} 
+\index{gadgets.\+h@{gadgets.\+h}!cut\+Pixels@{cut\+Pixels}}
+\index{cut\+Pixels@{cut\+Pixels}!gadgets.\+h@{gadgets.\+h}}
+\subsubsection{\texorpdfstring{cut\+Pixels()}{cutPixels()}}
+{\footnotesize\ttfamily void cut\+Pixels (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{Uint32 $\ast$}]{copy\+Paste\+Pixels,  }\item[{size\+\_\+t}]{start\+MouseX,  }\item[{size\+\_\+t}]{start\+MouseY,  }\item[{size\+\_\+t}]{end\+MouseX,  }\item[{size\+\_\+t}]{end\+MouseY }\end{DoxyParamCaption})}
+
+
+
+Copy smaller area of the canvas. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+\mbox{\tt out}  & {\em Uint32} & $\ast$undo\+Pixels Pointer to pixels used as the backup. \\
+\hline
+ & {\em size\+\_\+t} & start\+MouseX Value of X axis of the mouse in first point. \\
+\hline
+ & {\em size\+\_\+t} & start\+MouseY Value of Y axis of the mouse in first point. \\
+\hline
+ & {\em size\+\_\+t} & end\+MouseX Value of X axis of the mouse in second point. \\
+\hline
+ & {\em size\+\_\+t} & end\+MouseY Value of Y axis of the mouse in second point. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{gadgets_8h_ac72e786b4d072a118491e99fa0ddee3b}\label{gadgets_8h_ac72e786b4d072a118491e99fa0ddee3b}} 
+\index{gadgets.\+h@{gadgets.\+h}!paste\+Pixels@{paste\+Pixels}}
+\index{paste\+Pixels@{paste\+Pixels}!gadgets.\+h@{gadgets.\+h}}
+\subsubsection{\texorpdfstring{paste\+Pixels()}{pastePixels()}}
+{\footnotesize\ttfamily void paste\+Pixels (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{Uint32 $\ast$}]{copy\+Paste\+Pixels,  }\item[{size\+\_\+t $\ast$}]{copy\+Mouse\+Coordinates }\end{DoxyParamCaption})}
+
+
+
+Paste the smaller area of pixels to the canvas. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+\mbox{\tt out}  & {\em Uint32} & $\ast$undo\+Pixels Pointer to pixels used as the backup. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{gadgets_8h_a6b3429e43376f42dbc670a9116c091e2}\label{gadgets_8h_a6b3429e43376f42dbc670a9116c091e2}} 
+\index{gadgets.\+h@{gadgets.\+h}!set\+Canvas\+Background@{set\+Canvas\+Background}}
+\index{set\+Canvas\+Background@{set\+Canvas\+Background}!gadgets.\+h@{gadgets.\+h}}
+\subsubsection{\texorpdfstring{set\+Canvas\+Background()}{setCanvasBackground()}}
+{\footnotesize\ttfamily void set\+Canvas\+Background (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{Uint32}]{color }\end{DoxyParamCaption})}
+
+
+
+Function used to set the color of the canvas. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+ & {\em Uint32} & color Color with which we fill the canvas. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{gadgets_8h_ad37aed97b8ace80ac155699c69b49bca}\label{gadgets_8h_ad37aed97b8ace80ac155699c69b49bca}} 
+\index{gadgets.\+h@{gadgets.\+h}!swap\+Pixels@{swap\+Pixels}}
+\index{swap\+Pixels@{swap\+Pixels}!gadgets.\+h@{gadgets.\+h}}
+\subsubsection{\texorpdfstring{swap\+Pixels()}{swapPixels()}}
+{\footnotesize\ttfamily void swap\+Pixels (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{Uint32 $\ast$}]{undo\+Pixels }\end{DoxyParamCaption})}
+
+
+
+Exchange the values between pixels and undo\+Pixels. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+\mbox{\tt out}  & {\em Uint32} & $\ast$undo\+Pixels Pointer to pixels used as the backup. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{gadgets_8h_a7ba6fea7509543fa9016166ee7536069}\label{gadgets_8h_a7ba6fea7509543fa9016166ee7536069}} 
+\index{gadgets.\+h@{gadgets.\+h}!C\+O\+L\+O\+RS@{C\+O\+L\+O\+RS}}
+\index{C\+O\+L\+O\+RS@{C\+O\+L\+O\+RS}!gadgets.\+h@{gadgets.\+h}}
+\subsubsection{\texorpdfstring{C\+O\+L\+O\+RS}{COLORS}}
+{\footnotesize\ttfamily const Uint32 C\+O\+L\+O\+RS\mbox{[}$\,$\mbox{]}}
+
+Array of possible colors \mbox{\Hypertarget{gadgets_8h_aa23558ef3d4b5835d91b273fdfd4f4e8}\label{gadgets_8h_aa23558ef3d4b5835d91b273fdfd4f4e8}} 
+\index{gadgets.\+h@{gadgets.\+h}!M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT@{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}}
+\index{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT@{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}!gadgets.\+h@{gadgets.\+h}}
+\subsubsection{\texorpdfstring{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}{MENU\_HEIGHT}}
+{\footnotesize\ttfamily const size\+\_\+t M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}
+
+Height of the menu \mbox{\Hypertarget{gadgets_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}\label{gadgets_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}} 
+\index{gadgets.\+h@{gadgets.\+h}!N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS@{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}}
+\index{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS@{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}!gadgets.\+h@{gadgets.\+h}}
+\subsubsection{\texorpdfstring{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}{NUMBER\_OF\_COLORS}}
+{\footnotesize\ttfamily const size\+\_\+t N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}
+
+Number of colors available to use \mbox{\Hypertarget{gadgets_8h_a18e4575cb7720a49f17bf3cbd047211d}\label{gadgets_8h_a18e4575cb7720a49f17bf3cbd047211d}} 
+\index{gadgets.\+h@{gadgets.\+h}!S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT@{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}}
+\index{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT@{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}!gadgets.\+h@{gadgets.\+h}}
+\subsubsection{\texorpdfstring{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}{SCREEN\_HEIGHT}}
+{\footnotesize\ttfamily const size\+\_\+t S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}
+
+Height of the screen \mbox{\Hypertarget{gadgets_8h_a813bf6f2c749d348ea863e8270a31a1a}\label{gadgets_8h_a813bf6f2c749d348ea863e8270a31a1a}} 
+\index{gadgets.\+h@{gadgets.\+h}!S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH@{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}}
+\index{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH@{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}!gadgets.\+h@{gadgets.\+h}}
+\subsubsection{\texorpdfstring{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}{SCREEN\_WIDTH}}
+{\footnotesize\ttfamily const size\+\_\+t S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}
+
+Width of the screen 

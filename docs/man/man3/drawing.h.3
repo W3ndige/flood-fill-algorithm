@@ -1,0 +1,163 @@
+.TH "src/drawing.h" 3 "Fri Jun 8 2018" "Flood Fill Algorithm" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/drawing.h \- File contains functions used during drawing interactions with canvas\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <queue>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <SDL2/SDL\&.h>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBqueueFloodFill4\fP (Uint32 *pixels, size_t mouseX, size_t mouseY, Uint32 oldColor, Uint32 newColor)"
+.br
+.RI "Function used to fill an area with specified color\&. "
+.ti -1c
+.RI "void \fBpaintPixel\fP (Uint32 *pixels, size_t mouseX, size_t mouseY, int brushSize, Uint32 currentColor)"
+.br
+.RI "Function used to imitate the brush tool\&. "
+.ti -1c
+.RI "void \fBpaintLine\fP (Uint32 *pixels, size_t startMouseX, size_t startMouseY, size_t endMouseX, size_t endMouseY, int brushSize, Uint32 currentColor)"
+.br
+.RI "Function used to paint the line between two points\&. "
+.ti -1c
+.RI "void \fBpaintCircle\fP (Uint32 *pixels, size_t startMouseX, size_t startMouseY, size_t endMouseX, size_t endMouseY, int brushSize, Uint32 currentColor)"
+.br
+.RI "Function used to paint the circle between two points\&. "
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "const size_t \fBSCREEN_WIDTH\fP"
+.br
+.ti -1c
+.RI "const size_t \fBSCREEN_HEIGHT\fP"
+.br
+.ti -1c
+.RI "const size_t \fBMENU_HEIGHT\fP"
+.br
+.ti -1c
+.RI "const size_t \fBNUMBER_OF_COLORS\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+File contains functions used during drawing interactions with canvas\&. 
+
+
+.PP
+\fBDate:\fP
+.RS 4
+8 June 2018 
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "void paintCircle (Uint32 * pixels, size_t startMouseX, size_t startMouseY, size_t endMouseX, size_t endMouseY, int brushSize, Uint32 currentColor)"
+
+.PP
+Function used to paint the circle between two points\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIUint32\fP *pixels Pointer to array of pixels used as a canvas\&. 
+.br
+\fIsize_t\fP startMouseX Value of X axis of the mouse in first point\&. 
+.br
+\fIsize_t\fP startMouseY Value of Y axis of the mouse in first point\&. 
+.br
+\fIsize_t\fP endMouseX Value of X axis of the mouse in second point\&. 
+.br
+\fIsize_t\fP endMouseY Value of Y axis of the mouse in second point \&. 
+.br
+\fIint\fP brushSize Size of the brush\&. 
+.br
+\fIUint32\fP currentColor Value of the color that is going to be used while painting\&. 
+.RE
+.PP
+
+.SS "void paintLine (Uint32 * pixels, size_t startMouseX, size_t startMouseY, size_t endMouseX, size_t endMouseY, int brushSize, Uint32 currentColor)"
+
+.PP
+Function used to paint the line between two points\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIUint32\fP *pixels Pointer to array of pixels used as a canvas\&. 
+.br
+\fIsize_t\fP startMouseX Value of X axis of the mouse in first point\&. 
+.br
+\fIsize_t\fP startMouseY Value of Y axis of the mouse in first point\&. 
+.br
+\fIsize_t\fP endMouseX Value of X axis of the mouse in second point\&. 
+.br
+\fIsize_t\fP endMouseY Value of Y axis of the mouse in second point\&. 
+.br
+\fIint\fP brushSize Size of the brush\&. 
+.br
+\fIUint32\fP currentColor Value of the color that is going to be used while painting\&. 
+.RE
+.PP
+
+.SS "void paintPixel (Uint32 * pixels, size_t mouseX, size_t mouseY, int brushSize, Uint32 currentColor)"
+
+.PP
+Function used to imitate the brush tool\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIUint32\fP *pixels Pointer to array of pixels used as a canvas\&. 
+.br
+\fIsize_t\fP mouseX Value of X axis of the mouse\&. 
+.br
+\fIsize_t\fP mouseY Value of Y axis of the mouse\&. 
+.br
+\fIint\fP brushSize Size of the brush\&. 
+.br
+\fIUint32\fP currentColor Value of the color that is going to be used while painting\&. 
+.RE
+.PP
+
+.SS "void queueFloodFill4 (Uint32 * pixels, size_t mouseX, size_t mouseY, Uint32 oldColor, Uint32 newColor)"
+
+.PP
+Function used to fill an area with specified color\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIUint32\fP *pixels Pointer to array of pixels used as a canvas\&. 
+.br
+\fIsize_t\fP mouseX Value of X axis of the mouse\&. 
+.br
+\fIsize_t\fP mouseY Value of Y axis of the mouse\&. 
+.br
+\fIUint32\fP oldColor Value of the color that is currently in the canvas at specified point\&. 
+.br
+\fIUint32\fP newColor Value of the color that is going to be used while filling\&. 
+.RE
+.PP
+
+.SH "Variable Documentation"
+.PP 
+.SS "const size_t MENU_HEIGHT"
+Height of the menu 
+.SS "const size_t NUMBER_OF_COLORS"
+Number of colors available to use 
+.SS "const size_t SCREEN_HEIGHT"
+Height of the screen 
+.SS "const size_t SCREEN_WIDTH"
+Width of the screen 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Flood Fill Algorithm from the source code\&.

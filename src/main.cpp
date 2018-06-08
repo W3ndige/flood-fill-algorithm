@@ -1,17 +1,26 @@
+/**
+ * @file
+ * @date 8 June 2018
+ * @brief Main file containing all the logic.
+ *
+ */
+
 #include <stdio.h>
 #include "menu.h"
 #include "drawing.h"
 #include "gadgets.h"
 #include "files.h"
 
-// TODO(W3ndige): Modify straght line drawing in order to allow chaining lines.
+const size_t SCREEN_WIDTH  = 720; /**< Width of the screen */
+const size_t SCREEN_HEIGHT = 480; /**< Height of the screen */
+const size_t MENU_HEIGHT = 30; /**< Height of the menu */
+const size_t NUMBER_OF_COLORS = 20; /**< Number of colors available to use */
 
-const size_t SCREEN_WIDTH  = 720;
-const size_t SCREEN_HEIGHT = 480;
-const size_t MENU_HEIGHT = 30;
-const size_t NUMBER_OF_COLORS = 20;
+const Uint32 COLORS[NUMBER_OF_COLORS] = {
+    0xFF000000, 0xC0C0C0, 0x808080, 0xFFFFFF, 0x800000, 0xFF0000, 0xFFA500,
+    0x800080,   0xC969FF, 0xFF69B4, 0x008000, 0x08E100, 0x93FF2D, 0xC3C355,
+    0xFFFF00,   0xFFFF83, 0x000080, 0x0000FF, 0x008080, 0x00FFFF}; /**< Array of possible colors */
 
-const Uint32 COLORS[NUMBER_OF_COLORS] = {0xFF000000, 0xC0C0C0, 0x808080, 0xFFFFFF, 0x800000, 0xFF0000, 0xFFA500, 0x800080, 0xC969FF, 0xFF69B4, 0x008000, 0x08E100, 0x93FF2D, 0xC3C355, 0xFFFF00, 0xFFFF83, 0x000080, 0x0000FF, 0x008080, 0x00FFFF};
 
 int main(int argc, char *argv[]) {
   // Initialize SDL2.
@@ -21,7 +30,8 @@ int main(int argc, char *argv[]) {
    return 1;
  }
 
- SDL_Window *window = SDL_CreateWindow("Flood Fill", SDL_WINDOWPOS_CENTERED, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+ SDL_Window *window = SDL_CreateWindow("Flood Fill", SDL_WINDOWPOS_CENTERED, 100,
+                                       SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
  if (window == nullptr) {
    printf( "SDL Window could not initialize! SDL_Error: %s\n", SDL_GetError() );
    SDL_Quit();
@@ -39,8 +49,19 @@ int main(int argc, char *argv[]) {
  Uint32 *pixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT]; // Assign new set of pixels.
  Uint32 *undoPixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT]; // Assign a set of pixels used in undo/redo algorithm.
  Uint32 *copyPastePixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT];
- SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
+ SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
+                                          SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
  setCanvasBackground(pixels, 255);
+
+ if (argc > 1) {
+   if (strstr(argv[1], ".bmp") != 0) {
+     readImage(pixels, argv[1]);
+   }
+   else {
+     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Reading file error",
+                              "Can't open specified file. Program supports only .bmp files!", NULL);
+   }
+ }
 
  // Essential variables
  bool end = false;
@@ -155,12 +176,15 @@ int main(int argc, char *argv[]) {
              leftMouseButton = true;
              copyPixels(pixels,undoPixels);
              paintPixel(pixels, mouseX, mouseY, brushSize, currentColor);
-             if (mouseX > SCREEN_WIDTH - MENU_HEIGHT && mouseX < SCREEN_WIDTH && mouseY > 0 && mouseY < MENU_HEIGHT) {
+             if (mouseX > SCREEN_WIDTH - MENU_HEIGHT && mouseX < SCREEN_WIDTH &&
+                 mouseY > 0 && mouseY < MENU_HEIGHT) {
                currentColor = COLORS[0];
              }
              for (size_t i = 1; i <= NUMBER_OF_COLORS - 1; i++) {
-               if (mouseX > SCREEN_WIDTH - (i + 1) * MENU_HEIGHT && mouseX < SCREEN_WIDTH - i * MENU_HEIGHT && mouseY > 0 && mouseY < MENU_HEIGHT) {
-                   currentColor = COLORS[i];
+               if (mouseX > SCREEN_WIDTH - (i + 1) * MENU_HEIGHT &&
+                   mouseX < SCREEN_WIDTH - i * MENU_HEIGHT && mouseY > 0 &&
+                   mouseY < MENU_HEIGHT) {
+                     currentColor = COLORS[i];
                }
              }
              break;
@@ -191,47 +215,47 @@ int main(int argc, char *argv[]) {
        case SDL_KEYDOWN:
        switch (event.key.keysym.sym) {
          case SDLK_1:
-            saveManager(pixels, saveState, "saves/save1.pix", "samples/sample1.pix");
+            saveManager(pixels, saveState, "saves/save1.bmp", "samples/sample1.bmp");
             saveState = 3;
             printColorMenu(pixels);
             break;
          case SDLK_2:
-            saveManager(pixels, saveState, "saves/save2.pix", "samples/sample2.pix");
+            saveManager(pixels, saveState, "saves/save2.bmp", "samples/sample2.bmp");
             saveState = 3;
             printColorMenu(pixels);
             break;
          case SDLK_3:
-            saveManager(pixels, saveState, "saves/save3.pix", "samples/sample3.pix");
+            saveManager(pixels, saveState, "saves/save3.bmp", "samples/sample3.bmp");
             saveState = 3;
             printColorMenu(pixels);
             break;
         case SDLK_4:
-            saveManager(pixels, saveState, "saves/save4.pix", "samples/sample4.pix");
+            saveManager(pixels, saveState, "saves/save4.bmp", "samples/sample4.bmp");
             saveState = 3;
             printColorMenu(pixels);
             break;
         case SDLK_5:
-            saveManager(pixels, saveState, "saves/save5.pix", "samples/sample5.pix");
+            saveManager(pixels, saveState, "saves/save5.bmp", "samples/sample5.bmp");
             saveState = 3;
             printColorMenu(pixels);
             break;
         case SDLK_6:
-            saveManager(pixels, saveState, "saves/save6.pix", "samples/sample6.pix");
+            saveManager(pixels, saveState, "saves/save6.bmp", "samples/sample6.bmp");
             saveState = 3;
             printColorMenu(pixels);
             break;
         case SDLK_7:
-            saveManager(pixels, saveState, "saves/save7.pix", "samples/sample7.pix");
+            saveManager(pixels, saveState, "saves/save7.bmp", "samples/sample7.bmp");
             saveState = 3;
             printColorMenu(pixels);
             break;
         case SDLK_8:
-            saveManager(pixels, saveState, "saves/save8.pix", "samples/sample8.pix");
+            saveManager(pixels, saveState, "saves/save8.bmp", "samples/sample8.bmp");
             saveState = 3;
             printColorMenu(pixels);
             break;
         case SDLK_9:
-            saveManager(pixels, saveState, "saves/save9.pix", "samples/sample9.pix");
+            saveManager(pixels, saveState, "saves/save9.bmp", "samples/sample9.bmp");
             saveState = 3;
             printColorMenu(pixels);
             break;
@@ -266,7 +290,7 @@ int main(int argc, char *argv[]) {
             }
             break;
          case SDLK_p:
-            pastePixels(pixels, copyPastePixels, copyMouseCoordinates, mouseX, mouseY);
+            pastePixels(pixels, copyPastePixels, copyMouseCoordinates);
             break;
          case SDLK_o:
            if (drawCircleFirstPoint == true && drawCircleEndPoint == false) {

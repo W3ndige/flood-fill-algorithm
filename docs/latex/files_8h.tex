@@ -1,0 +1,134 @@
+\hypertarget{files_8h}{}\section{src/files.h File Reference}
+\label{files_8h}\index{src/files.\+h@{src/files.\+h}}
+
+
+File contains functions used during the saving and reading images.  
+
+
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}C\+Img.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{files_8h_a289e714a8b00cc55df82e98068e97e50}{save\+Image}} (Uint32 $\ast$pixels, const char $\ast$file\+Name)
+\begin{DoxyCompactList}\small\item\em Function used to save the image into the specified file. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{files_8h_a938e8c52be426b04ffad1082dd082dcb}{read\+Image}} (Uint32 $\ast$pixels, const char $\ast$file\+Name)
+\begin{DoxyCompactList}\small\item\em Function used to read the image into from specified file. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{files_8h_a4a0c327bfd8ce9ce8e666c2a3ef807e6}{save\+Manager}} (Uint32 $\ast$pixels, int save\+State, const char $\ast$file\+Name, const char $\ast$sample\+Name)
+\begin{DoxyCompactList}\small\item\em Function used to manage the state of save, with possible slots. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{files_8h_ac560c73351b96bd41b62c1d5596de936}\label{files_8h_ac560c73351b96bd41b62c1d5596de936}} 
+void \mbox{\hyperlink{files_8h_ac560c73351b96bd41b62c1d5596de936}{print\+Controls}} ()
+\begin{DoxyCompactList}\small\item\em Function used to print the controls. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const size\+\_\+t \mbox{\hyperlink{files_8h_a813bf6f2c749d348ea863e8270a31a1a}{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{files_8h_a18e4575cb7720a49f17bf3cbd047211d}{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{files_8h_aa23558ef3d4b5835d91b273fdfd4f4e8}{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{files_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}}
+\item 
+const Uint32 \mbox{\hyperlink{files_8h_a7ba6fea7509543fa9016166ee7536069}{C\+O\+L\+O\+RS}} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+File contains functions used during the saving and reading images. 
+
+\begin{DoxyDate}{Date}
+8 June 2018 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{files_8h_a938e8c52be426b04ffad1082dd082dcb}\label{files_8h_a938e8c52be426b04ffad1082dd082dcb}} 
+\index{files.\+h@{files.\+h}!read\+Image@{read\+Image}}
+\index{read\+Image@{read\+Image}!files.\+h@{files.\+h}}
+\subsubsection{\texorpdfstring{read\+Image()}{readImage()}}
+{\footnotesize\ttfamily void read\+Image (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{const char $\ast$}]{file\+Name }\end{DoxyParamCaption})}
+
+
+
+Function used to read the image into from specified file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+{\em const} & char $\ast$file\+Name Name of the save file. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{files_8h_a289e714a8b00cc55df82e98068e97e50}\label{files_8h_a289e714a8b00cc55df82e98068e97e50}} 
+\index{files.\+h@{files.\+h}!save\+Image@{save\+Image}}
+\index{save\+Image@{save\+Image}!files.\+h@{files.\+h}}
+\subsubsection{\texorpdfstring{save\+Image()}{saveImage()}}
+{\footnotesize\ttfamily void save\+Image (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{const char $\ast$}]{file\+Name }\end{DoxyParamCaption})}
+
+
+
+Function used to save the image into the specified file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+{\em const} & char $\ast$file\+Name Name of the save file. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{files_8h_a4a0c327bfd8ce9ce8e666c2a3ef807e6}\label{files_8h_a4a0c327bfd8ce9ce8e666c2a3ef807e6}} 
+\index{files.\+h@{files.\+h}!save\+Manager@{save\+Manager}}
+\index{save\+Manager@{save\+Manager}!files.\+h@{files.\+h}}
+\subsubsection{\texorpdfstring{save\+Manager()}{saveManager()}}
+{\footnotesize\ttfamily void save\+Manager (\begin{DoxyParamCaption}\item[{Uint32 $\ast$}]{pixels,  }\item[{int}]{save\+State,  }\item[{const char $\ast$}]{file\+Name,  }\item[{const char $\ast$}]{sample\+Name }\end{DoxyParamCaption})}
+
+
+
+Function used to manage the state of save, with possible slots. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Uint32} & $\ast$pixels Pointer to array of pixels used as a canvas. \\
+\hline
+{\em int} & save\+State State of the save. \\
+\hline
+{\em const} & char $\ast$file\+Name Name of the save file. \\
+\hline
+{\em const} & char $\ast$sample\+Name Name of the sample. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{files_8h_a7ba6fea7509543fa9016166ee7536069}\label{files_8h_a7ba6fea7509543fa9016166ee7536069}} 
+\index{files.\+h@{files.\+h}!C\+O\+L\+O\+RS@{C\+O\+L\+O\+RS}}
+\index{C\+O\+L\+O\+RS@{C\+O\+L\+O\+RS}!files.\+h@{files.\+h}}
+\subsubsection{\texorpdfstring{C\+O\+L\+O\+RS}{COLORS}}
+{\footnotesize\ttfamily const Uint32 C\+O\+L\+O\+RS\mbox{[}$\,$\mbox{]}}
+
+Array of possible colors \mbox{\Hypertarget{files_8h_aa23558ef3d4b5835d91b273fdfd4f4e8}\label{files_8h_aa23558ef3d4b5835d91b273fdfd4f4e8}} 
+\index{files.\+h@{files.\+h}!M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT@{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}}
+\index{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT@{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}!files.\+h@{files.\+h}}
+\subsubsection{\texorpdfstring{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}{MENU\_HEIGHT}}
+{\footnotesize\ttfamily const size\+\_\+t M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}
+
+Height of the menu \mbox{\Hypertarget{files_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}\label{files_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}} 
+\index{files.\+h@{files.\+h}!N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS@{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}}
+\index{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS@{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}!files.\+h@{files.\+h}}
+\subsubsection{\texorpdfstring{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}{NUMBER\_OF\_COLORS}}
+{\footnotesize\ttfamily const size\+\_\+t N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}
+
+Number of colors available to use \mbox{\Hypertarget{files_8h_a18e4575cb7720a49f17bf3cbd047211d}\label{files_8h_a18e4575cb7720a49f17bf3cbd047211d}} 
+\index{files.\+h@{files.\+h}!S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT@{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}}
+\index{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT@{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}!files.\+h@{files.\+h}}
+\subsubsection{\texorpdfstring{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}{SCREEN\_HEIGHT}}
+{\footnotesize\ttfamily const size\+\_\+t S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}
+
+Height of the screen \mbox{\Hypertarget{files_8h_a813bf6f2c749d348ea863e8270a31a1a}\label{files_8h_a813bf6f2c749d348ea863e8270a31a1a}} 
+\index{files.\+h@{files.\+h}!S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH@{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}}
+\index{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH@{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}!files.\+h@{files.\+h}}
+\subsubsection{\texorpdfstring{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}{SCREEN\_WIDTH}}
+{\footnotesize\ttfamily const size\+\_\+t S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}
+
+Width of the screen 

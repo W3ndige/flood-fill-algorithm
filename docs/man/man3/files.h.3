@@ -1,0 +1,125 @@
+.TH "src/files.h" 3 "Fri Jun 8 2018" "Flood Fill Algorithm" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/files.h \- File contains functions used during the saving and reading images\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <SDL2/SDL\&.h>\fP
+.br
+\fC#include 'CImg\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBsaveImage\fP (Uint32 *pixels, const char *fileName)"
+.br
+.RI "Function used to save the image into the specified file\&. "
+.ti -1c
+.RI "void \fBreadImage\fP (Uint32 *pixels, const char *fileName)"
+.br
+.RI "Function used to read the image into from specified file\&. "
+.ti -1c
+.RI "void \fBsaveManager\fP (Uint32 *pixels, int saveState, const char *fileName, const char *sampleName)"
+.br
+.RI "Function used to manage the state of save, with possible slots\&. "
+.ti -1c
+.RI "void \fBprintControls\fP ()"
+.br
+.RI "Function used to print the controls\&. "
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "const size_t \fBSCREEN_WIDTH\fP"
+.br
+.ti -1c
+.RI "const size_t \fBSCREEN_HEIGHT\fP"
+.br
+.ti -1c
+.RI "const size_t \fBMENU_HEIGHT\fP"
+.br
+.ti -1c
+.RI "const size_t \fBNUMBER_OF_COLORS\fP"
+.br
+.ti -1c
+.RI "const Uint32 \fBCOLORS\fP []"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+File contains functions used during the saving and reading images\&. 
+
+
+.PP
+\fBDate:\fP
+.RS 4
+8 June 2018 
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "void readImage (Uint32 * pixels, const char * fileName)"
+
+.PP
+Function used to read the image into from specified file\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIUint32\fP *pixels Pointer to array of pixels used as a canvas\&. 
+.br
+\fIconst\fP char *fileName Name of the save file\&. 
+.RE
+.PP
+
+.SS "void saveImage (Uint32 * pixels, const char * fileName)"
+
+.PP
+Function used to save the image into the specified file\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIUint32\fP *pixels Pointer to array of pixels used as a canvas\&. 
+.br
+\fIconst\fP char *fileName Name of the save file\&. 
+.RE
+.PP
+
+.SS "void saveManager (Uint32 * pixels, int saveState, const char * fileName, const char * sampleName)"
+
+.PP
+Function used to manage the state of save, with possible slots\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIUint32\fP *pixels Pointer to array of pixels used as a canvas\&. 
+.br
+\fIint\fP saveState State of the save\&. 
+.br
+\fIconst\fP char *fileName Name of the save file\&. 
+.br
+\fIconst\fP char *sampleName Name of the sample\&. 
+.RE
+.PP
+
+.SH "Variable Documentation"
+.PP 
+.SS "const Uint32 COLORS[]"
+Array of possible colors 
+.SS "const size_t MENU_HEIGHT"
+Height of the menu 
+.SS "const size_t NUMBER_OF_COLORS"
+Number of colors available to use 
+.SS "const size_t SCREEN_HEIGHT"
+Height of the screen 
+.SS "const size_t SCREEN_WIDTH"
+Width of the screen 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Flood Fill Algorithm from the source code\&.

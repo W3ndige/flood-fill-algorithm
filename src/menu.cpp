@@ -22,8 +22,10 @@ void printColorMenu(Uint32 *pixels) {
 }
 
 void printCurrentBrush(Uint32 *pixels, int brushSize, Uint32 currentColor) {
-  for (size_t i = MENU_HEIGHT / 2 - brushSize / 2; i <  MENU_HEIGHT / 2 - brushSize / 2 + brushSize - 1; i++) {
-    for (size_t j = (3 * MENU_HEIGHT / 2) - brushSize / 2; j < brushSize / 2 + (3 * MENU_HEIGHT / 2); j++) {
+  for (size_t i = MENU_HEIGHT / 2 - brushSize / 2;
+       i <  MENU_HEIGHT / 2 - brushSize / 2 + brushSize - 1; i++) {
+    for (size_t j = (3 * MENU_HEIGHT / 2) - brushSize / 2;
+         j < brushSize / 2 + (3 * MENU_HEIGHT / 2); j++) {
       pixels[j + i * SCREEN_WIDTH] = currentColor;
     }
   }

@@ -1,0 +1,130 @@
+.TH "src/menu.h" 3 "Fri Jun 8 2018" "Flood Fill Algorithm" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/menu.h \- File contains functions used while drawing the upper menu\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <SDL2/SDL\&.h>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBprintCurrentColor\fP (Uint32 *pixels, Uint32 currentColor)"
+.br
+.RI "Function used to fill an area with specified color\&. "
+.ti -1c
+.RI "void \fBprintColorMenu\fP (Uint32 *pixels)"
+.br
+.RI "Print all the possible colors\&. "
+.ti -1c
+.RI "void \fBprintCurrentBrush\fP (Uint32 *pixels, int brushSize, Uint32 currentColor)"
+.br
+.RI "Print all the possible colors\&. "
+.ti -1c
+.RI "void \fBresetCurrentBrushBackground\fP (Uint32 *pixels)"
+.br
+.RI "Reset the field that is used to print the size of the current brush\&. "
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "const size_t \fBSCREEN_WIDTH\fP"
+.br
+.ti -1c
+.RI "const size_t \fBSCREEN_HEIGHT\fP"
+.br
+.ti -1c
+.RI "const size_t \fBMENU_HEIGHT\fP"
+.br
+.ti -1c
+.RI "const size_t \fBNUMBER_OF_COLORS\fP"
+.br
+.ti -1c
+.RI "const Uint32 \fBCOLORS\fP []"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+File contains functions used while drawing the upper menu\&. 
+
+
+.PP
+\fBDate:\fP
+.RS 4
+8 June 2018 
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "void printColorMenu (Uint32 * pixels)"
+
+.PP
+Print all the possible colors\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIUint32\fP *pixels Pointer to array of pixels used as a canvas\&. 
+.RE
+.PP
+
+.SS "void printCurrentBrush (Uint32 * pixels, int brushSize, Uint32 currentColor)"
+
+.PP
+Print all the possible colors\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIUint32\fP *pixels Pointer to array of pixels used as a canvas\&. 
+.br
+\fIint\fP brushSize Current size of the brush 
+.br
+\fIUint32\fP currentColor Value of the current color\&. 
+.RE
+.PP
+
+.SS "void printCurrentColor (Uint32 * pixels, Uint32 currentColor)"
+
+.PP
+Function used to fill an area with specified color\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIUint32\fP *pixels Pointer to array of pixels used as a canvas\&. 
+.br
+\fIUint32\fP currentColor Value of the current color\&. 
+.RE
+.PP
+
+.SS "void resetCurrentBrushBackground (Uint32 * pixels)"
+
+.PP
+Reset the field that is used to print the size of the current brush\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIUint32\fP *pixels Pointer to array of pixels used as a canvas\&. 
+.RE
+.PP
+
+.SH "Variable Documentation"
+.PP 
+.SS "const Uint32 COLORS[]"
+Array of possible colors 
+.SS "const size_t MENU_HEIGHT"
+Height of the menu 
+.SS "const size_t NUMBER_OF_COLORS"
+Number of colors available to use 
+.SS "const size_t SCREEN_HEIGHT"
+Height of the screen 
+.SS "const size_t SCREEN_WIDTH"
+Width of the screen 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Flood Fill Algorithm from the source code\&.

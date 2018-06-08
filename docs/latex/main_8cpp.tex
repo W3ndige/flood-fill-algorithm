@@ -1,0 +1,80 @@
+\hypertarget{main_8cpp}{}\section{src/main.cpp File Reference}
+\label{main_8cpp}\index{src/main.\+cpp@{src/main.\+cpp}}
+
+
+Main file containing all the logic.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}menu.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}drawing.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}gadgets.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}files.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{main_8cpp_a0ddf1224851353fc92bfbff6f499fa97}\label{main_8cpp_a0ddf1224851353fc92bfbff6f499fa97}} 
+int {\bfseries main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const size\+\_\+t \mbox{\hyperlink{main_8cpp_a813bf6f2c749d348ea863e8270a31a1a}{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}} = 720
+\item 
+const size\+\_\+t \mbox{\hyperlink{main_8cpp_a18e4575cb7720a49f17bf3cbd047211d}{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}} = 480
+\item 
+const size\+\_\+t \mbox{\hyperlink{main_8cpp_aa23558ef3d4b5835d91b273fdfd4f4e8}{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}} = 30
+\item 
+const size\+\_\+t \mbox{\hyperlink{main_8cpp_a8aa2872c0bd3f8a592c4dad7be3405f2}{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}} = 20
+\item 
+const Uint32 \mbox{\hyperlink{main_8cpp_a8bce360e4054d410ee4b07fe8853a09a}{C\+O\+L\+O\+RS}} \mbox{[}\mbox{\hyperlink{menu_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Main file containing all the logic. 
+
+\begin{DoxyDate}{Date}
+8 June 2018 
+\end{DoxyDate}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{main_8cpp_a8bce360e4054d410ee4b07fe8853a09a}\label{main_8cpp_a8bce360e4054d410ee4b07fe8853a09a}} 
+\index{main.\+cpp@{main.\+cpp}!C\+O\+L\+O\+RS@{C\+O\+L\+O\+RS}}
+\index{C\+O\+L\+O\+RS@{C\+O\+L\+O\+RS}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{C\+O\+L\+O\+RS}{COLORS}}
+{\footnotesize\ttfamily const Uint32 C\+O\+L\+O\+RS\mbox{[}\mbox{\hyperlink{menu_8h_a8aa2872c0bd3f8a592c4dad7be3405f2}{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}}\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+    0xFF000000, 0xC0C0C0, 0x808080, 0xFFFFFF, 0x800000, 0xFF0000, 0xFFA500,
+    0x800080,   0xC969FF, 0xFF69B4, 0x008000, 0x08E100, 0x93FF2D, 0xC3C355,
+    0xFFFF00,   0xFFFF83, 0x000080, 0x0000FF, 0x008080, 0x00FFFF\}
+\end{DoxyCode}
+Array of possible colors \mbox{\Hypertarget{main_8cpp_aa23558ef3d4b5835d91b273fdfd4f4e8}\label{main_8cpp_aa23558ef3d4b5835d91b273fdfd4f4e8}} 
+\index{main.\+cpp@{main.\+cpp}!M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT@{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}}
+\index{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT@{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT}{MENU\_HEIGHT}}
+{\footnotesize\ttfamily const size\+\_\+t M\+E\+N\+U\+\_\+\+H\+E\+I\+G\+HT = 30}
+
+Height of the menu \mbox{\Hypertarget{main_8cpp_a8aa2872c0bd3f8a592c4dad7be3405f2}\label{main_8cpp_a8aa2872c0bd3f8a592c4dad7be3405f2}} 
+\index{main.\+cpp@{main.\+cpp}!N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS@{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}}
+\index{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS@{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS}{NUMBER\_OF\_COLORS}}
+{\footnotesize\ttfamily const size\+\_\+t N\+U\+M\+B\+E\+R\+\_\+\+O\+F\+\_\+\+C\+O\+L\+O\+RS = 20}
+
+Number of colors available to use \mbox{\Hypertarget{main_8cpp_a18e4575cb7720a49f17bf3cbd047211d}\label{main_8cpp_a18e4575cb7720a49f17bf3cbd047211d}} 
+\index{main.\+cpp@{main.\+cpp}!S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT@{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}}
+\index{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT@{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT}{SCREEN\_HEIGHT}}
+{\footnotesize\ttfamily const size\+\_\+t S\+C\+R\+E\+E\+N\+\_\+\+H\+E\+I\+G\+HT = 480}
+
+Height of the screen \mbox{\Hypertarget{main_8cpp_a813bf6f2c749d348ea863e8270a31a1a}\label{main_8cpp_a813bf6f2c749d348ea863e8270a31a1a}} 
+\index{main.\+cpp@{main.\+cpp}!S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH@{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}}
+\index{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH@{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}!main.\+cpp@{main.\+cpp}}
+\subsubsection{\texorpdfstring{S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH}{SCREEN\_WIDTH}}
+{\footnotesize\ttfamily const size\+\_\+t S\+C\+R\+E\+E\+N\+\_\+\+W\+I\+D\+TH = 720}
+
+Width of the screen 
